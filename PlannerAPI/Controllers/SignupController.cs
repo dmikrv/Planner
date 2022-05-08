@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NuGet.Packaging;
 using PlannerAPI.Entities;
+using PlannerAPI.ModelEnums;
 using PlannerAPI.Models;
 using Action = PlannerAPI.Entities.Action;
 

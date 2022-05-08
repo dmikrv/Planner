@@ -1,4 +1,4 @@
-namespace PlannerAPI.Models;
+namespace PlannerAPI.ModelEnums;
 
 public enum TagTypes
 {

@@ -1,3 +1,5 @@
+using PlannerAPI.ModelEnums;
+
 namespace PlannerAPI.Models;
 
 public abstract class ActionModel
