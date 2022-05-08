@@ -8,6 +8,8 @@ namespace PlannerAPI.Entities
         public Action()
         {
             Tags = new HashSet<Tag>();
+            Areas = new HashSet<Area>();
+            Contacts = new HashSet<Contact>();
         }
         
         public long Id { get; set; }
@@ -29,5 +31,7 @@ namespace PlannerAPI.Entities
         public virtual ActionState State { get; set; } = null!;
         public virtual WaitingAction WaitingAction { get; set; } = null!;
         public virtual ICollection<Tag>? Tags { get; set; }
+        public virtual ICollection<Area>? Areas { get; set; }
+        public virtual ICollection<Contact>? Contacts { get; set; }
     }
 }

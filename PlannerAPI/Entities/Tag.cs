@@ -12,5 +12,7 @@ namespace PlannerAPI.Entities
 
         public virtual Account Account { get; set; } = null!;
         public virtual Color? Color { get; set; }
+        public virtual ICollection<Action> Actions { get; set; }
+
     }
 }

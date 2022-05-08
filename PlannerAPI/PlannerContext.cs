@@ -21,10 +21,7 @@ namespace PlannerAPI
 
         public virtual DbSet<Account> Accounts { get; set; } = null!;
         public virtual DbSet<Action> Actions { get; set; } = null!;
-        public virtual DbSet<ActionArea> ActionAreas { get; set; } = null!;
-        public virtual DbSet<ActionContact> ActionContacts { get; set; } = null!;
         public virtual DbSet<ActionState> ActionStates { get; set; } = null!;
-        public virtual DbSet<ActionTag> ActionTags { get; set; } = null!;
         public virtual DbSet<Area> Areas { get; set; } = null!;
         public virtual DbSet<Color> Colors { get; set; } = null!;
         public virtual DbSet<Contact> Contacts { get; set; } = null!;
@@ -35,15 +32,6 @@ namespace PlannerAPI
         public virtual DbSet<Tag> Tags { get; set; } = null!;
         public virtual DbSet<TrashAction> TrashActions { get; set; } = null!;
         public virtual DbSet<WaitingAction> WaitingActions { get; set; } = null!;
-
-//         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//         {
-//             if (!optionsBuilder.IsConfigured)
-//             {
-// #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-//                 optionsBuilder.UseSqlServer("Server=localhost;Database=PlannerDb;User Id=sa;Password=5df46sd4fFSD4fd;");
-//             }
-//         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -69,12 +57,13 @@ namespace PlannerAPI
                 entity.HasOne(d => d.Account)
                     .WithMany(p => p.Actions)
                     .HasForeignKey(d => d.AccountId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .OnDelete(DeleteBehavior.Restrict)
                     .HasConstraintName("Action_AccountId_Account_Id");
 
                 entity.HasOne(d => d.Energy)
                     .WithMany(p => p.Actions)
                     .HasForeignKey(d => d.EnergyId)
+                    .OnDelete(DeleteBehavior.Restrict)
                     .HasConstraintName("Action_EnergyId_Energy_Id");
 
                 entity.HasOne(d => d.Project)
@@ -86,24 +75,17 @@ namespace PlannerAPI
                 entity.HasOne(d => d.State)
                     .WithMany(p => p.Actions)
                     .HasForeignKey(d => d.StateId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .OnDelete(DeleteBehavior.Restrict)
                     .HasConstraintName("Action_StateId_ActionState_Id");
-            });
 
-            modelBuilder.Entity<ActionArea>(entity =>
-            {
-                entity.HasKey(e => new { e.ActionId, e.AreaId })
-                    .HasName("PK__ActionAr__68E876DDCD52BF44");
-
-                entity.ToTable("ActionArea");
-            });
-
-            modelBuilder.Entity<ActionContact>(entity =>
-            {
-                entity.HasKey(e => new { e.ActionId, e.ContactId })
-                    .HasName("PK__ActionCo__5A2596804968D375");
-
-                entity.ToTable("ActionContact");
+                entity.HasMany(d => d.Areas)
+                    .WithMany(p => p.Actions);
+                
+                entity.HasMany(d => d.Tags)
+                    .WithMany(p => p.Actions);
+                
+                entity.HasMany(d => d.Contacts)
+                    .WithMany(p => p.Actions);
             });
 
             modelBuilder.Entity<ActionState>(entity =>
@@ -111,14 +93,6 @@ namespace PlannerAPI
                 entity.ToTable("ActionState");
 
                 entity.Property(e => e.Id).ValueGeneratedNever();
-            });
-
-            modelBuilder.Entity<ActionTag>(entity =>
-            {
-                entity.HasKey(e => new { e.ActionId, e.TagId })
-                    .HasName("PK__ActionTa__29B43B43C57243DB");
-
-                entity.ToTable("ActionTag");
             });
 
             modelBuilder.Entity<Area>(entity =>
@@ -130,6 +104,7 @@ namespace PlannerAPI
                 entity.HasOne(d => d.Account)
                     .WithMany(p => p.Areas)
                     .HasForeignKey(d => d.AccountId)
+                    .OnDelete(DeleteBehavior.Restrict)
                     .HasConstraintName("Area_AccountId_Account_Id");
 
                 entity.HasOne(d => d.Color)
@@ -155,6 +130,7 @@ namespace PlannerAPI
                 entity.HasOne(d => d.Account)
                     .WithMany(p => p.Contacts)
                     .HasForeignKey(d => d.AccountId)
+                    .OnDelete(DeleteBehavior.Restrict)
                     .HasConstraintName("Contact_AccountId_Account_Id");
 
                 entity.HasOne(d => d.Color)
@@ -186,12 +162,13 @@ namespace PlannerAPI
                 entity.HasOne(d => d.Account)
                     .WithMany(p => p.Projects)
                     .HasForeignKey(d => d.AccountId)
+                    .OnDelete(DeleteBehavior.Restrict)
                     .HasConstraintName("Project_AccountId_Account_Id");
 
                 entity.HasOne(d => d.State)
                     .WithMany(p => p.Projects)
                     .HasForeignKey(d => d.StateId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .OnDelete(DeleteBehavior.Restrict)
                     .HasConstraintName("Project_StateId_ProjectState_Id");
             });
 
@@ -223,6 +200,7 @@ namespace PlannerAPI
                 entity.HasOne(d => d.Account)
                     .WithMany(p => p.Tags)
                     .HasForeignKey(d => d.AccountId)
+                    .OnDelete(DeleteBehavior.Restrict)
                     .HasConstraintName("Tag_AccountId_Account_Id");
 
                 entity.HasOne(d => d.Color)
@@ -240,6 +218,7 @@ namespace PlannerAPI
 
                 entity.HasOne(d => d.Account)
                     .WithMany(p => p.TrashActions)
+                    .OnDelete(DeleteBehavior.Restrict)
                     .HasForeignKey(d => d.AccountId)
                     .HasConstraintName("TrashAction_AccountId_Account_Id");
             });

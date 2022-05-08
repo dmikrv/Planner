@@ -58,7 +58,11 @@ public class SignupController : ControllerBase
                 EnergyId = (int)ActionEnergies.MIDDLE,
                 CreatedDate = DateTime.Now,
                 DueDate = DateTime.Today + TimeSpan.FromDays(4),
-                // Tags = 
+                Areas = new List<Area>
+                {
+                    account.Areas.First(x => x.Name == "personal"),
+                    account.Areas.First(x => x.Name == "work"),
+                }
             }
         });
         account.Projects.AddRange(new []
