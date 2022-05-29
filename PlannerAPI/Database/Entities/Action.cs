@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace PlannerAPI.Entities
+﻿namespace PlannerAPI.Database.Entities
 {
     public partial class Action
     {
@@ -18,20 +15,34 @@ namespace PlannerAPI.Entities
         public bool IsDone { get; set; }
         public bool IsFocused { get; set; }
         public TimeSpan? TimeRequired { get; set; }
-        public int? EnergyId { get; set; }
+        public EnergyLevel? Energy { get; set; }
         public DateTime? DueDate { get; set; }
-        public int StateId { get; set; }
+        public ActionState State { get; set; }
         public DateTime CreatedDate { get; set; }
         public long AccountId { get; set; }
         public long? ProjectId { get; set; }
 
         public virtual Account Account { get; set; } = null!;
-        public virtual Energy? Energy { get; set; }
         public virtual Project? Project { get; set; }
-        public virtual ActionState State { get; set; } = null!;
         public virtual WaitingAction WaitingAction { get; set; } = null!;
         public virtual ICollection<Tag>? Tags { get; set; }
         public virtual ICollection<Area>? Areas { get; set; }
         public virtual ICollection<Contact>? Contacts { get; set; }
+        
+        public enum ActionState
+        {
+            Inbox,
+            Next,
+            Waiting,
+            Scheduled,
+            Someday
+        }
+        
+        public enum EnergyLevel
+        {
+            Low,
+            Middle,
+            High
+        }
     }
 }

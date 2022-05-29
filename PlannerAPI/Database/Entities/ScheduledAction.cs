@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace PlannerAPI.Entities
+namespace PlannerAPI.Database.Entities
 {
     public partial class ScheduledAction
     {

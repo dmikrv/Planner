@@ -1,12 +1,11 @@
-using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using NuGet.Packaging;
-using PlannerAPI.Entities;
-using PlannerAPI.ModelEnums;
+using PlannerAPI.Database;
+using PlannerAPI.Database.Entities;
 using PlannerAPI.Models;
-using Action = PlannerAPI.Entities.Action;
+
+using Action = PlannerAPI.Database.Entities.Action;
 
 namespace PlannerAPI.Controllers;
 
@@ -16,13 +15,11 @@ public class SignupController : ControllerBase
 {
     private readonly PlannerContext _db;
     private readonly ILogger<AccountsController> _logger;
-    private readonly IMapper _mapper;
 
-    public SignupController(ILogger<AccountsController> logger, PlannerContext db, IMapper mapper)
+    public SignupController(ILogger<AccountsController> logger, PlannerContext db)
     {
         _db = db;
         _logger = logger;
-        _mapper = mapper;
     }
 
     [AllowAnonymous]
@@ -32,11 +29,11 @@ public class SignupController : ControllerBase
         // TODO: validation
 
         var account = new Account { Email = accountModel.Email };
-
+        
         account.Areas.AddRange(new []
         {
-            new Area {Name = "personal", ColorId = (int)Colors.BLUE},
-            new Area {Name = "work", ColorId = (int)Colors.GREEN},
+            new Area {Name = "personal", Color = Color.Blue},
+            new Area {Name = "work", Color = Color.Green},
         });
         account.Tags.AddRange(new []
         {
@@ -55,8 +52,8 @@ public class SignupController : ControllerBase
                 IsFocused = true,
                 Notes = "notes", 
                 TimeRequired = TimeSpan.FromMinutes(10), 
-                StateId = (int)ActionStates.NEXT,
-                EnergyId = (int)ActionEnergies.MIDDLE,
+                State = Action.ActionState.Next,
+                Energy = Action.EnergyLevel.Middle,
                 CreatedDate = DateTime.Now,
                 DueDate = DateTime.Today + TimeSpan.FromDays(4),
                 Areas = new List<Area>
@@ -72,7 +69,7 @@ public class SignupController : ControllerBase
             {
                 Name = "My new project",
                 Notes = "my project notes",
-                StateId = (int)ProjectStates.ACTIVE,
+                State = Project.ProjectState.Active,
                 CreatedDate = DateTime.Now,
             }
         });
