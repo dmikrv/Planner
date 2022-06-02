@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
@@ -8,7 +9,7 @@ using Action = PlannerAPI.Database.Entities.Action;
 
 namespace PlannerAPI.Database
 {
-    public partial class PlannerContext : DbContext
+    public partial class PlannerContext : IdentityDbContext<Account>
     {
         public PlannerContext()
         {
@@ -19,7 +20,7 @@ namespace PlannerAPI.Database
         {
             this.Database.EnsureCreated();
         }
-
+        
         public virtual DbSet<Account> Accounts { get; set; } = null!;
         public virtual DbSet<Action> Actions { get; set; } = null!;
         public virtual DbSet<Area> Areas { get; set; } = null!;
@@ -32,12 +33,6 @@ namespace PlannerAPI.Database
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Account>(entity =>
-            {
-                entity.ToTable("Accounts");
-                entity.Property(e => e.Email);
-            });
-
             modelBuilder.Entity<Action>(entity =>
             {
                 entity.ToTable("Actions");
@@ -53,10 +48,10 @@ namespace PlannerAPI.Database
                     .HasForeignKey(d => d.AccountId)
                     .OnDelete(DeleteBehavior.Restrict);
 
-                entity.HasOne(d => d.Project)
-                    .WithMany(p => p.Actions)
-                    .HasForeignKey(d => d.ProjectId)
-                    .OnDelete(DeleteBehavior.Cascade);
+                // entity.HasOne(d => d.Project)
+                //     .WithMany(p => p.Actions)
+                //     .HasForeignKey(d => d.ProjectId)
+                //     .OnDelete(DeleteBehavior.Cascade);
 
                 entity.HasMany(d => d.Areas)
                     .WithMany(p => p.Actions);
@@ -68,7 +63,6 @@ namespace PlannerAPI.Database
                     .WithMany(p => p.Actions);
             });
             
-
             modelBuilder.Entity<Area>(entity =>
             {
                 entity.ToTable("Areas");
@@ -81,7 +75,6 @@ namespace PlannerAPI.Database
                     .OnDelete(DeleteBehavior.Restrict);
             });
             
-
             modelBuilder.Entity<Contact>(entity =>
             {
                 entity.ToTable("Contacts");
@@ -115,7 +108,6 @@ namespace PlannerAPI.Database
             {
                 entity.ToTable("ScheduledActions");
                 entity.HasKey(e => e.ActionId);
-                entity.Property(e => e.ActionId).ValueGeneratedNever();
                 entity.Property(e => e.Date).HasColumnType("datetime");
             });
 
@@ -146,13 +138,20 @@ namespace PlannerAPI.Database
             {
                 entity.ToTable("WaitingActions");
                 entity.HasKey(e => e.ActionId);
-                entity.Property(e => e.ActionId).ValueGeneratedNever();
+                // entity.Property(e => e.ActionId).ValueGeneratedNever();
 
                 entity.HasOne(d => d.Action)
                     .WithOne(p => p.WaitingAction)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasForeignKey<WaitingAction>(d => d.ActionId);
+                
+                entity.HasOne(d => d.Contact)
+                    .WithOne(p => p.WaitingAction)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasForeignKey<WaitingAction>(d => d.ContactId);
             });
 
+            base.OnModelCreating(modelBuilder);
             OnModelCreatingPartial(modelBuilder);
         }
 

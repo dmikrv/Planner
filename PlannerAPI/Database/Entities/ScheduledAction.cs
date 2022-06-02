@@ -7,5 +7,7 @@ namespace PlannerAPI.Database.Entities
     {
         public long ActionId { get; set; }
         public DateTime? Date { get; set; }
+
+        public virtual Action Action { get; set; } = null!;
     }
 }

@@ -1,42 +1,164 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-// using PlannerAPI.Entities;
+using Microsoft.IdentityModel.Tokens;
+using NuGet.Packaging;
+using PlannerAPI.Database;
+using PlannerAPI.Database.Entities;
 using PlannerAPI.Models;
+
+using Action = PlannerAPI.Database.Entities.Action;
 
 namespace PlannerAPI.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class AccountsController : ControllerBase
 {
-    // private readonly PlannerContext _db;
+    private readonly PlannerContext _db;
     private readonly ILogger<AccountsController> _logger;
+    private readonly UserManager<Account> _userManager;
+    private readonly RoleManager<IdentityRole> _roleManager;
+    private readonly IConfiguration _configuration;
 
-    // public AccountsController(ILogger<AccountsController> logger, PlannerContext db)
-    // {
-    //     _db = db;
-    //     _logger = logger;
-    // }
+    public AccountsController(ILogger<AccountsController> logger, PlannerContext db, UserManager<Account> userManager, 
+        RoleManager<IdentityRole> roleManager, IConfiguration configuration)
+    {
+        _db = db;
+        _logger = logger;
+        _userManager = userManager;
+        _roleManager = roleManager;
+        _configuration = configuration;
+    }
+    
+    [AllowAnonymous]
+    [HttpPost]
+    [Route("login")]
+    public async Task<ActionResult> LoginAsync(LoginModel accountModel)
+    {
+        var account = await _userManager.FindByNameAsync(accountModel.Email);
 
-    // [HttpPost]
-    // public async Task<AccountModel> Create(AccountModel account)
-    // {
-    //     // var x = await _db.Accounts.FindAsync(1);
-    //     
-    //     // _db.Areas.Add(new Area {})
-    //
-    //     // _db.Accounts.Add(account);
-    //     // await _db.SaveChangesAsync();
-    //     // return CreatedAtAction(nameof(GetAsync), new { id = user.Id }, user);
-    // }
+        if (account is null)
+            return Unauthorized();
 
-    // [HttpGet]
-    // public async Task<IEnumerable<TagModel>> GetAll()
-    // {
-    //     // long id = 1;
-    //     //
-    //     // var account = await _db.Accounts.FindAsync(userId);
-    //     //
-    //     // var x = account.Areas;
-    // }
+        if (!await _userManager.CheckPasswordAsync(account, accountModel.Password))
+            return Unauthorized();
+
+        var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.Name, accountModel.Email),      
+            new Claim(ClaimTypes.Email, accountModel.Email),
+        };
+        
+        var userRoles = await _userManager.GetRolesAsync(account);
+        foreach (var userRole in userRoles)
+            claims.Add(new Claim(ClaimTypes.Role, userRole));
+
+        var token = this.GetToken(claims);
+
+        return Ok(new
+        {
+            token = new JwtSecurityTokenHandler().WriteToken(token),
+            expiration = token.ValidTo
+        });
+    }
+    
+    [AllowAnonymous]
+    [HttpPost]
+    [Route("signup")]
+    public async Task<ActionResult> SignupAsync(RegisterModel accountModel)
+    {
+        // TODO
+        var search = await _userManager.FindByNameAsync(accountModel.Email);
+        if (search is not null)
+            // TODO: такой пользователь уже есть
+            return BadRequest();
+
+        var account = new Account { UserName = accountModel.Email, Email = accountModel.Email };
+        var result = await _userManager.CreateAsync(account, accountModel.Password);
+
+        if (!result.Succeeded)
+            return BadRequest(result.Errors);
+        
+        if (await _roleManager.RoleExistsAsync("user"))
+            await _userManager.AddToRoleAsync(account, "user");
+
+        var area1 = new Area {Name = "personal", Color = Color.Blue};
+        var area2 = new Area {Name = "work", Color = Color.Green};
+        account.Areas.AddRange(new []
+        {
+            area1,
+            area2
+        });
+        account.Tags.AddRange(new []
+        {
+            new Tag {Name = "agendas"},
+            new Tag {Name = "anywhere", Color = Color.Purple},
+            new Tag {Name = "calls"},
+            new Tag {Name = "computer"},
+            new Tag {Name = "errands"},
+            new Tag {Name = "home"},
+            new Tag {Name = "office"},
+        });
+        account.Actions.AddRange(new []
+        {
+            new Action {
+                Text = "Welcome to Planner",
+                IsFocused = true,
+                Notes = "notes", 
+                TimeRequired = TimeSpan.FromMinutes(10), 
+                State = Action.ActionState.Next,
+                Energy = Action.EnergyLevel.Middle,
+                CreatedDate = DateTime.Now,
+                DueDate = DateTime.Today + TimeSpan.FromDays(4),
+                Areas = new Area[]
+                {
+                    area1, area2
+                }
+            }
+        });
+        account.Projects.AddRange(new []
+        {
+            new Project
+            {
+                Name = "My new project",
+                Notes = "my project notes",
+                State = Project.ProjectState.Active,
+                CreatedDate = DateTime.Now,
+            }
+        });
+        await _db.SaveChangesAsync();
+        
+        return NoContent();
+    }
+    
+    [HttpGet]
+    [Authorize]
+    [Route("me")]
+    public ActionResult MeAsync()
+    {
+        var user = User.Identity;
+
+        if (user.IsAuthenticated)
+            return Ok(new { name = user.Name, type = user.AuthenticationType });
+
+        throw new Exception("identity is empty, but user is authorized");
+    }
+    
+    private JwtSecurityToken GetToken(List<Claim> authClaims)
+    {
+        var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
+
+        var token = new JwtSecurityToken(
+            issuer: _configuration["JWT:ValidIssuer"],
+            audience: _configuration["JWT:ValidAudience"],
+            expires: DateTime.Now.AddDays(1),
+            claims: authClaims,
+            signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
+        );
+        return token;
+    }
 }

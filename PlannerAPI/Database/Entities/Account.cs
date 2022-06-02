@@ -1,6 +1,8 @@
-﻿namespace PlannerAPI.Database.Entities
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace PlannerAPI.Database.Entities
 {
-    public partial class Account
+    public partial class Account : IdentityUser
     {
         public Account()
         {
@@ -11,9 +13,6 @@
             Tags = new HashSet<Tag>();
             TrashActions = new HashSet<TrashAction>();
         }
-
-        public long Id { get; set; }
-        public string Email { get; set; } = null!;
 
         public virtual ICollection<Action> Actions { get; set; }
         public virtual ICollection<Area> Areas { get; set; }

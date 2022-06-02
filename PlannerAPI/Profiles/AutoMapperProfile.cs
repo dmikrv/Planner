@@ -2,6 +2,8 @@ using System.Drawing;
 using AutoMapper;
 using PlannerAPI.Database.Entities;
 using PlannerAPI.Models;
+using PlannerAPI.Models.Actions;
+using Action = PlannerAPI.Database.Entities.Action;
 using Color = PlannerAPI.Database.Entities.Color;
 
 namespace PlannerAPI.Profiles;
@@ -16,25 +18,34 @@ public class AutoMapperProfile : Profile
             .ForMember(d => d.Color, o 
                 => o.MapFrom(s => (ColorModel)s.Color )).ReverseMap();
         
+        CreateMap<Area, AreaTagModel>()
+            .ForMember(d => d.Color, o 
+                => o.PreCondition(s => s.Color is not null))
+            .ForMember(d => d.Color, o 
+                => o.MapFrom(s => (ColorModel)s.Color )).ReverseMap();
         
-        // CreateMap<Color, ColorModel>();
-        // CreateMap<Color, Colors>()
-        //     .ForMember(d => d, o => o.MapFrom(s => (Colors) s.Id));
+        CreateMap<Contact, ContactTagModel>()
+            .ForMember(d => d.Color, o 
+                => o.PreCondition(s => s.Color is not null))
+            .ForMember(d => d.Color, o 
+                => o.MapFrom(s => (ColorModel)s.Color )).ReverseMap();
 
-        // CreateMap<Colors, Color>()
-        //     .ForMember(d => d.Id, o => o.MapFrom(s => (int) s)).ReverseMap();
-        //
-        // CreateMap<ActionStates, ActionState>()
-        //     .ForMember(d => d.Id, o => o.MapFrom(s => (int) s));
-        //
-        // CreateMap<ActionEnergies, Energy>()
-        //     .ForMember(d => d.Id, o => o.MapFrom(s => (int) s));
-        //
-        // CreateMap<ProjectStates, ProjectState>()
-        //     .ForMember(d => d.Id, o => o.MapFrom(s => (int) s));
+        CreateMap<TrashAction, TrashActionModel>().ReverseMap();
 
-        // CreateMap<Tag, TagModel>()
-        //     .ForMember(d => d.Type, o => o.MapFrom(x => TagTypes.LABEL))
-        //     .ForMember(d => d.Color, o => o.MapFrom(x => (TagTypes)x.Color.Id));
+        CreateMap<Action, ActionModel>()
+            .ForMember(d => d.Energy, o 
+                => o.PreCondition(s => s.Energy is not null))
+            .ForMember(d => d.Energy, o 
+                => o.MapFrom(s => (ActionModel.EnergyLevelModel)s.Energy ))
+            
+            .ForMember(d => d.AreaTags, o 
+                => o.MapFrom(s => s.Areas ))
+            
+            .ForMember(d => d.ContactTags, o 
+                => o.MapFrom(s => s.Contacts ))
+            
+            .ForMember(d => d.LabelTags, o 
+                => o.MapFrom(s => s.Tags ))
+            .ReverseMap();
     }
 }

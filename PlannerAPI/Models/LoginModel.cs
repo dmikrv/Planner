@@ -1,7 +1,15 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace PlannerAPI.Models;
 
 public class LoginModel
 {
-    public long Id { get; set; }
+    [Required]
+    [EmailAddress]
     public string Email { get; set; }
+    [Required]
+    [DataType(DataType.Password)]
+    public string Password { get; set; }
+    
+    public bool RememberMe { get; set; }
 }

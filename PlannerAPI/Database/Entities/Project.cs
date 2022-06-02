@@ -16,7 +16,7 @@ namespace PlannerAPI.Database.Entities
         public DateTime? DueDate { get; set; }
         public ProjectState State { get; set; }
         public DateTime CreatedDate { get; set; }
-        public long AccountId { get; set; }
+        public string AccountId { get; set; }
 
         public virtual Account Account { get; set; } = null!;
         public virtual ICollection<Action> Actions { get; set; }

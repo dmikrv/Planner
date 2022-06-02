@@ -7,7 +7,7 @@ namespace PlannerAPI.Database.Entities
     {
         public long Id { get; set; }
         public string Name { get; set; } = null!;
-        public long AccountId { get; set; }
+        public string AccountId { get; set; }
 
         public virtual Account Account { get; set; } = null!;
     }

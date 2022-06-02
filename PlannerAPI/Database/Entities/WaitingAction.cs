@@ -9,5 +9,6 @@ namespace PlannerAPI.Database.Entities
         public long ContactId { get; set; }
 
         public virtual Action Action { get; set; } = null!;
+        public virtual Contact Contact { get; set; } = null!;
     }
 }
