@@ -1,0 +1,28 @@
+<mat-card *ngIf="labels | async as lbs; else loading">
+  <span>Our catalog</span>
+  <mat-table [dataSource]="lbs">
+    <ng-container matColumnDef="Id">
+      <mat-header-cell *matHeaderCellDef> ID </mat-header-cell>
+      <mat-cell *matCellDef="let label"> {{label.id}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="Name">
+      <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+      <mat-cell *matCellDef="let label"> {{label.name}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="Color">
+      <mat-header-cell *matHeaderCellDef> Color </mat-header-cell>
+      <mat-cell *matCellDef="let label"> {{label.color}} </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="columns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: columns;"></mat-row>
+  </mat-table>
+</mat-card>
+
+<ng-template #loading>
+  <div class="loading">
+    Loading...
+  </div>
+</ng-template>
