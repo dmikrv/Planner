@@ -1,10 +1,10 @@
 using System.Drawing;
 using AutoMapper;
-using PlannerAPI.Database.Entities;
+using Planner.Data.Entities;
 using PlannerAPI.Models;
 using PlannerAPI.Models.Actions;
-using Action = PlannerAPI.Database.Entities.Action;
-using Color = PlannerAPI.Database.Entities.Color;
+using Action = Planner.Data.Entities.Action;
+using Color = Planner.Data.Entities.Color;
 
 namespace PlannerAPI.Profiles;
 

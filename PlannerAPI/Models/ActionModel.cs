@@ -19,14 +19,14 @@ public class ActionModel
 
     public ProjectModel? Project { get; set; }
     
-    public ContactTagModel? WaitingContact { get; set; } // only with state Waiting
+    // public ContactTagModel? WaitingContact { get; set; } // only with state Waiting
     public DateTime? ScheduledTime { get; set; } // only with state Scheduled
     
     public enum ActionStateModel
     {
         Inbox,
         Next,
-        Waiting,
+        // Waiting,
         Scheduled,
         Someday
     }

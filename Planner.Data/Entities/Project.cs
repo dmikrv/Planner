@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace PlannerAPI.Database.Entities
+namespace Planner.Data.Entities
 {
     public partial class Project
     {

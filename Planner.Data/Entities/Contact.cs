@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace PlannerAPI.Database.Entities
+namespace Planner.Data.Entities
 {
     public partial class Contact
     {
@@ -12,7 +12,7 @@ namespace PlannerAPI.Database.Entities
 
         public virtual Account Account { get; set; } = null!;
         public virtual ICollection<Action> Actions { get; set; }
-        public virtual WaitingAction? WaitingAction { get; set; } = null!;
+        // public virtual Action? WaitingAction { get; set; } = null!;
 
     }
 }

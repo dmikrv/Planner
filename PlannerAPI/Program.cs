@@ -1,15 +1,13 @@
 using System.Text;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using PlannerAPI.Database;
-using PlannerAPI.Database.Entities;
+using Planner.Auth.Common;
+using Planner.Data;
+using Planner.Data.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,24 +15,8 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 string connectionString = builder.Configuration.GetConnectionString("MSSQL");
 // builder.Services.AddDbContext<PlannerContext>(options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
-builder.Services.AddDbContext<PlannerContext>(options => options.UseSqlServer(connectionString));
-
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-    // options.SaveToken = true;
-    // options.RequireHttpsMetadata = false;
-    options.TokenValidationParameters = new TokenValidationParameters()
-    {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidAudience = builder.Configuration["JWT:ValidAudience"],
-        ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
-    };
-});
-
-builder.Services.AddIdentityCore<Account>(options =>
+builder.Services.AddDbContext<PlannerContext>(options => options.UseSqlServer(connectionString))
+    .AddIdentityCore<Account>(options =>
     {
         options.User.RequireUniqueEmail = true;
         options.Password.RequireDigit = false;
@@ -45,7 +27,33 @@ builder.Services.AddIdentityCore<Account>(options =>
     })
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<PlannerContext>();
-    // .AddDefaultTokenProviders();
+
+builder.Services.AddCors(opts =>
+{
+    opts.AddDefaultPolicy(
+        builder =>
+        {
+            builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+        });
+});
+
+var authOptions = builder.Configuration.GetSection("Auth").Get<JwtAuthOptions>();
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+    // options.SaveToken = true;
+    options.RequireHttpsMetadata = false;
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidAudience = authOptions.Audience,
+        ValidIssuer = authOptions.Issuer,
+        IssuerSigningKey = authOptions.GetSymmetricSecurityKey()
+    };
+});
 
 builder.Services
     .AddControllers()
@@ -98,6 +106,7 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.UseHttpsRedirection();
+app.UseCors();
 
 app.UseAuthentication();
 app.UseAuthorization();

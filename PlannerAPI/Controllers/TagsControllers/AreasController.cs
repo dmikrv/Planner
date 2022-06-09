@@ -8,8 +8,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using PlannerAPI.Database;
-using PlannerAPI.Database.Entities;
+using Planner.Data;
+using Planner.Data.Entities;
 using PlannerAPI.Models;
 
 namespace PlannerAPI.Controllers.TagsControllers

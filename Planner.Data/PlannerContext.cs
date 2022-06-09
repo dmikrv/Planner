@@ -4,17 +4,13 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-using PlannerAPI.Database.Entities;
-using Action = PlannerAPI.Database.Entities.Action;
+using Planner.Data.Entities;
+using Action = Planner.Data.Entities.Action;
 
-namespace PlannerAPI.Database
+namespace Planner.Data
 {
     public partial class PlannerContext : IdentityDbContext<Account>
     {
-        public PlannerContext()
-        {
-        }
-
         public PlannerContext(DbContextOptions<PlannerContext> options)
             : base(options)
         {
@@ -26,11 +22,8 @@ namespace PlannerAPI.Database
         public virtual DbSet<Area> Areas { get; set; } = null!;
         public virtual DbSet<Contact> Contacts { get; set; } = null!;
         public virtual DbSet<Project> Projects { get; set; } = null!;
-        public virtual DbSet<ScheduledAction> ScheduledActions { get; set; } = null!;
         public virtual DbSet<Tag> Tags { get; set; } = null!;
         public virtual DbSet<TrashAction> TrashActions { get; set; } = null!;
-        public virtual DbSet<WaitingAction> WaitingActions { get; set; } = null!;
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Action>(entity =>
@@ -38,15 +31,21 @@ namespace PlannerAPI.Database
                 entity.ToTable("Actions");
                 entity.Property(e => e.CreatedDate).HasColumnType("datetime");
                 entity.Property(e => e.DueDate).HasColumnType("date");
+                entity.Property(e => e.ScheduledDate).HasColumnType("date");
                 entity.Property(e => e.Notes);
                 entity.Property(e => e.Text);
                 entity.Property(e => e.Energy);
                 entity.Property(e => e.State);
+                entity.Property(e => e.IsDone);
 
                 entity.HasOne(d => d.Account)
                     .WithMany(p => p.Actions)
                     .HasForeignKey(d => d.AccountId)
                     .OnDelete(DeleteBehavior.Restrict);
+                
+                // entity.HasMany(d => d.)
+                //     .WithMany(p => p.WaitingAction)
+                    // .HasForeignKey(d => d.WaitingContactId)
 
                 // entity.HasOne(d => d.Project)
                 //     .WithMany(p => p.Actions)
@@ -104,13 +103,6 @@ namespace PlannerAPI.Database
 
             });
 
-            modelBuilder.Entity<ScheduledAction>(entity =>
-            {
-                entity.ToTable("ScheduledActions");
-                entity.HasKey(e => e.ActionId);
-                entity.Property(e => e.Date).HasColumnType("datetime");
-            });
-
             modelBuilder.Entity<Tag>(entity =>
             {
                 entity.ToTable("Tags");
@@ -132,23 +124,6 @@ namespace PlannerAPI.Database
                     .WithMany(p => p.TrashActions)
                     .OnDelete(DeleteBehavior.Restrict)
                     .HasForeignKey(d => d.AccountId);
-            });
-
-            modelBuilder.Entity<WaitingAction>(entity =>
-            {
-                entity.ToTable("WaitingActions");
-                entity.HasKey(e => e.ActionId);
-                // entity.Property(e => e.ActionId).ValueGeneratedNever();
-
-                entity.HasOne(d => d.Action)
-                    .WithOne(p => p.WaitingAction)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasForeignKey<WaitingAction>(d => d.ActionId);
-                
-                entity.HasOne(d => d.Contact)
-                    .WithOne(p => p.WaitingAction)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasForeignKey<WaitingAction>(d => d.ContactId);
             });
 
             base.OnModelCreating(modelBuilder);

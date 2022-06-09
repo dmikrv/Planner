@@ -24,7 +24,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Helpers" />
+      <ProjectReference Include="..\Planner.Auth.Common\Planner.Auth.Common.csproj" />
+      <ProjectReference Include="..\Planner.Data\Planner.Data.csproj" />
     </ItemGroup>
 
 </Project>

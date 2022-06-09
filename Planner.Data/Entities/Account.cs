@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace PlannerAPI.Database.Entities
+namespace Planner.Data.Entities
 {
     public partial class Account : IdentityUser
     {

@@ -1,4 +1,4 @@
-namespace PlannerAPI.Database.Entities;
+namespace Planner.Data.Entities;
 
 public enum Color
 {

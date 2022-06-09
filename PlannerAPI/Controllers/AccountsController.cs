@@ -6,11 +6,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using NuGet.Packaging;
-using PlannerAPI.Database;
-using PlannerAPI.Database.Entities;
+using Planner.Data;
+using Planner.Data.Entities;
 using PlannerAPI.Models;
 
-using Action = PlannerAPI.Database.Entities.Action;
+using Action = Planner.Data.Entities.Action;
 
 namespace PlannerAPI.Controllers;
 
@@ -22,50 +22,16 @@ public class AccountsController : ControllerBase
     private readonly ILogger<AccountsController> _logger;
     private readonly UserManager<Account> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
-    private readonly IConfiguration _configuration;
 
     public AccountsController(ILogger<AccountsController> logger, PlannerContext db, UserManager<Account> userManager, 
-        RoleManager<IdentityRole> roleManager, IConfiguration configuration)
+        RoleManager<IdentityRole> roleManager)
     {
         _db = db;
         _logger = logger;
         _userManager = userManager;
         _roleManager = roleManager;
-        _configuration = configuration;
     }
-    
-    [AllowAnonymous]
-    [HttpPost]
-    [Route("login")]
-    public async Task<ActionResult> LoginAsync(LoginModel accountModel)
-    {
-        var account = await _userManager.FindByNameAsync(accountModel.Email);
-
-        if (account is null)
-            return Unauthorized();
-
-        if (!await _userManager.CheckPasswordAsync(account, accountModel.Password))
-            return Unauthorized();
-
-        var claims = new List<Claim>
-        {
-            new Claim(ClaimTypes.Name, accountModel.Email),      
-            new Claim(ClaimTypes.Email, accountModel.Email),
-        };
-        
-        var userRoles = await _userManager.GetRolesAsync(account);
-        foreach (var userRole in userRoles)
-            claims.Add(new Claim(ClaimTypes.Role, userRole));
-
-        var token = this.GetToken(claims);
-
-        return Ok(new
-        {
-            token = new JwtSecurityTokenHandler().WriteToken(token),
-            expiration = token.ValidTo
-        });
-    }
-    
+  
     [AllowAnonymous]
     [HttpPost]
     [Route("signup")]
@@ -146,19 +112,5 @@ public class AccountsController : ControllerBase
             return Ok(new { name = user.Name, type = user.AuthenticationType });
 
         throw new Exception("identity is empty, but user is authorized");
-    }
-    
-    private JwtSecurityToken GetToken(List<Claim> authClaims)
-    {
-        var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
-
-        var token = new JwtSecurityToken(
-            issuer: _configuration["JWT:ValidIssuer"],
-            audience: _configuration["JWT:ValidAudience"],
-            expires: DateTime.Now.AddDays(1),
-            claims: authClaims,
-            signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
-        );
-        return token;
     }
 }
