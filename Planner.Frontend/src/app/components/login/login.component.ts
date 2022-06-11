@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import {AuthService} from "../../services/auth.service";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {ActivatedRoute, Router} from "@angular/router";
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -9,15 +10,15 @@ import {ActivatedRoute, Router} from "@angular/router";
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
+
+  form!: FormGroup;
+  loginInvalid!: boolean;
+  formSubmitAttempt!: boolean;
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private as: AuthService) { }
-
-  form!: FormGroup;
-  loginInvalid!: boolean;
-  formSubmitAttempt!: boolean;
 
   async onSubmit() {
     console.log('login on submit')
@@ -29,8 +30,8 @@ export class LoginComponent implements OnInit {
       const password = this.form.get('password')!.value;
       const rememberMe = this.form.get('rememberMe')!.value;
       await this.as.login(username, password, rememberMe)
-        .subscribe(res => {this.router.navigate([''])},
-            error => {this.loginInvalid = true;});
+        .subscribe(res => { this.router.navigate(['']) },
+          error => { this.loginInvalid = true; });
 
     } else {
       this.formSubmitAttempt = true;
@@ -44,7 +45,7 @@ export class LoginComponent implements OnInit {
       rememberMe: ['']
     });
 
-    if (this.as.isAuthenticated()) {
+    if (this.as.isAuthenticated) {
       await this.router.navigate(['']);
     }
   }

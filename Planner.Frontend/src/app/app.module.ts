@@ -1,31 +1,33 @@
+import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatTableModule } from '@angular/material/table';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { JwtModule } from '@auth0/angular-jwt';
+import { environment } from 'src/environments/environment';
 
+import { AUTH_API_URL, RESOURCE_API_URL } from './app-injections-tokens';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {HttpClientModule} from "@angular/common/http";
-
-import {MatCardModule} from "@angular/material/card";
-import {MatInputModule} from "@angular/material/input";
-import {MatButtonModule} from "@angular/material/button";
-import {MatTableModule} from "@angular/material/table";
-import {MatFormFieldModule} from "@angular/material/form-field";
-import {ActionsModule} from "./components/actions/actions.module";
-import { LabelsComponent } from './components/tags/labels/labels.component';
-
-import {AUTH_API_URL, RESOURCE_API_URL} from "./app-injections-tokens";
-import {environment} from "../environments/environment";
-import {JwtModule} from "@auth0/angular-jwt";
-import {ACCESS_TOKEN_KEY} from "./services/auth.service";
+import { ActionsModule } from './components/actions/actions.module';
 import { LoginComponent } from './components/login/login.component';
-import {NextComponent} from "./components/actions/next/next.component";
-import {MatToolbarModule} from "@angular/material/toolbar";
-import {MatIconModule} from "@angular/material/icon";
-import {MatMenuModule} from "@angular/material/menu";
-import {TagsModule} from "./components/tags/tags.module";
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {MatCheckboxModule} from "@angular/material/checkbox";
+import { TagsModule } from './components/tags/tags.module';
+import { NavBarComponent } from './nav-bar/nav-bar.component';
+import { ACCESS_TOKEN_KEY } from './services/auth.service';
 
 export function tokenGetter() {
   return localStorage.getItem(ACCESS_TOKEN_KEY) ?? sessionStorage.getItem(ACCESS_TOKEN_KEY);
@@ -34,7 +36,8 @@ export function tokenGetter() {
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent
+    LoginComponent,
+    NavBarComponent
   ],
   imports: [
     BrowserModule,
@@ -61,6 +64,11 @@ export function tokenGetter() {
     MatIconModule,
     MatMenuModule,
     MatCheckboxModule,
+    MatTooltipModule,
+    MatNativeDateModule,
+    MatSidenavModule,
+    MatExpansionModule,
+    MatDividerModule,
 
     ActionsModule,
     TagsModule,

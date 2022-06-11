@@ -1,48 +1,76 @@
-<!--<mat-toolbar color="primary" class="expanded-toolbar">-->
-<!--  <span>-->
-<!--      <button mat-button routerLink="/">{{title}}</button>-->
-<!--      <button mat-button routerLink="/"><mat-icon>home</mat-icon></button>-->
-<!--  </span>-->
-<!--  <div fxLayout="row" fxShow="false" fxShow.gt-sm>-->
-<!--    <button mat-button routerLink="/login" *ngIf="!isAuthenticated">-->
-<!--      <mat-icon>power_settings_new</mat-icon>-->
-<!--      Login-->
-<!--    </button>-->
-<!--    <button mat-button *ngIf="isAuthenticated" (click)="logout()">-->
-<!--      <mat-icon>exit_to_app</mat-icon>-->
-<!--      Logout-->
-<!--    </button>-->
-<!--    <button mat-button routerLink="/game">-->
-<!--      <mat-icon>gamepad</mat-icon>-->
-<!--      Play-->
-<!--    </button>-->
-<!--  </div>-->
-<!--  <button mat-button [mat-menu-trigger-for]="menu" fxHide="false" fxHide.gt-sm>-->
-<!--    <mat-icon>menu</mat-icon>-->
-<!--  </button>-->
-<!--</mat-toolbar>-->
+<div class="app">
+  <app-nav-bar class="navbar" [title]="title" (sidebarToggle)="sidenav?.toggle()"></app-nav-bar>
 
-<!--<mat-menu x-position="before" #menu="matMenu">-->
-<!--  <button mat-menu-item routerLink="/">-->
-<!--    <mat-icon>home</mat-icon>-->
-<!--  </button>-->
+  <mat-sidenav-container class="sidebar" color="primary">
+    <mat-sidenav [opened]="isAuthenticated" mode="side" class="sidenav" #sidenav>
 
-<!--  <button mat-menu-item routerLink="/game">-->
-<!--    <mat-icon>gamepad</mat-icon>-->
-<!--    Play-->
-<!--  </button>-->
+      <mat-accordion multi="true" style="padding: 0;">
 
-<!--  <button mat-menu-item routerLink="/login" *ngIf="!isAuthenticated">-->
-<!--    <mat-icon>power_settings_new</mat-icon>-->
-<!--    Login-->
-<!--  </button>-->
+        <mat-expansion-panel class="expansion-panel" expanded="true">
+          <mat-expansion-panel-header>
+            <mat-panel-title>CAPTURE</mat-panel-title>
+          </mat-expansion-panel-header>
 
-<!--  <button mat-menu-item *ngIf="isAuthenticated" (click)="logout()">-->
-<!--    <mat-icon>exit_to_app</mat-icon>-->
-<!--    Logout-->
-<!--  </button>-->
+          <a mat-button class="sidenav-item" routerLinkActive="sidenav-item-active" routerLink="list/inbox">
+            <mat-icon class="sidebar-icon">inbox</mat-icon>
+            Inbox
+          </a>
+        </mat-expansion-panel>
 
-<!--</mat-menu>-->
+        <mat-divider></mat-divider>
 
-<router-outlet></router-outlet>
+        <mat-expansion-panel class="expansion-panel" expanded="true">
+          <mat-expansion-panel-header>
+            <mat-panel-title>ACTIONS</mat-panel-title>
+          </mat-expansion-panel-header>
 
+          <a mat-button class="sidenav-item" routerLinkActive="sidenav-item-active" routerLink="list/next">
+            <mat-icon class="sidebar-icon">access_time</mat-icon>
+            Next
+          </a>
+          <br>
+          <a mat-button class="sidenav-item" routerLinkActive="sidenav-item-active" routerLink="list/waiting">
+            <mat-icon class="sidebar-icon">coffee</mat-icon>
+            Waiting
+          </a>
+          <br>
+          <a mat-button class="sidenav-item" routerLinkActive="sidenav-item-active" routerLink="list/sheduled">
+            <mat-icon class="sidebar-icon">calendar_today</mat-icon>
+            Sheduled
+          </a>
+          <br>
+          <a mat-button class="sidenav-item" routerLinkActive="sidenav-item-active" routerLink="list/someday">
+            <mat-icon class="sidebar-icon">settings_brightness</mat-icon>
+            Someday
+          </a>
+          <mat-divider></mat-divider>
+          <a mat-button class="sidenav-item" routerLinkActive="sidenav-item-active" routerLink="list/focus">
+            <mat-icon class="sidebar-icon">star_border</mat-icon>
+            Focus
+          </a>
+        </mat-expansion-panel>
+
+        <mat-divider></mat-divider>
+
+        <mat-expansion-panel class="expansion-panel" expanded="true">
+          <mat-expansion-panel-header>
+            <mat-panel-title>CLEANUP</mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <a mat-button class="sidenav-item" routerLinkActive="sidenav-item-active" routerLink="list/trash">
+            <mat-icon class="sidebar-icon">delete_outline</mat-icon>
+            Trash
+          </a>
+        </mat-expansion-panel>
+
+
+      </mat-accordion>
+
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+
+  </mat-sidenav-container>
+</div>
