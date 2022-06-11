@@ -2,9 +2,7 @@ using System.Drawing;
 using AutoMapper;
 using Planner.Data.Entities;
 using PlannerAPI.Models;
-using PlannerAPI.Models.Actions;
 using Action = Planner.Data.Entities.Action;
-using Color = Planner.Data.Entities.Color;
 
 namespace PlannerAPI.Profiles;
 
@@ -30,7 +28,9 @@ public class AutoMapperProfile : Profile
             .ForMember(d => d.Color, o 
                 => o.MapFrom(s => (ColorModel)s.Color )).ReverseMap();
 
-        CreateMap<TrashAction, TrashActionModel>().ReverseMap();
+        CreateMap<TrashAction, TrashActionModel>()
+            .ForMember(d => d.Text, o 
+                => o.MapFrom(s => s.Name )).ReverseMap();
 
         CreateMap<Action, ActionModel>()
             .ForMember(d => d.Energy, o 

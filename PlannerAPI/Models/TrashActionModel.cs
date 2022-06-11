@@ -1,4 +1,4 @@
-namespace PlannerAPI.Models.Actions;
+namespace PlannerAPI.Models;
 
 public class TrashActionModel
 {
