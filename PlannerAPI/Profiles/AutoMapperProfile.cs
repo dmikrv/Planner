@@ -3,7 +3,6 @@ using AutoMapper;
 using Planner.Data.Entities;
 using PlannerAPI.Models;
 using Action = Planner.Data.Entities.Action;
-using Color = Planner.Data.Entities.Color;
 
 namespace PlannerAPI.Profiles;
 

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -33,10 +34,25 @@ namespace PlannerAPI.Controllers
             _mapper = mapper;
         }
 
+        // public class QueryParameters
+        // {
+        //     public ActionModel.ActionStateModel State { get; set; }
+        // }
+
         [HttpGet]
+        public async Task<IEnumerable<ActionModel>> GetAllAsync([FromQuery, Required]ActionModel.ActionStateModel state, CancellationToken ct = default)
+        {
+            return await _db.Actions.Where(x => x.Account.UserName == User.Identity!.Name)
+                .Where(x => x.State == _mapper.Map<Action.ActionState>(state))
+                .ProjectTo<ActionModel>(_mapper.ConfigurationProvider).ToArrayAsync(ct);
+        }
+        
+        [HttpGet]
+        [Route("focus")]
         public async Task<IEnumerable<ActionModel>> GetAllAsync(CancellationToken ct = default)
         {
             return await _db.Actions.Where(x => x.Account.UserName == User.Identity!.Name)
+                .Where(x => x.IsFocused)
                 .ProjectTo<ActionModel>(_mapper.ConfigurationProvider).ToArrayAsync(ct);
         }
         
