@@ -1,11 +1,11 @@
-import {Inject, Injectable} from '@angular/core';
-import {Observable, tap} from "rxjs";
+import { HttpClient } from '@angular/common/http';
+import { Inject, Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import { JwtHelperService } from '@auth0/angular-jwt';
+import { Observable, tap } from 'rxjs';
 
-import {Token} from "../models/token.model";
-import {HttpClient} from "@angular/common/http";
-import {AUTH_API_URL} from "../app-injections-tokens";
-import {JwtHelperService} from "@auth0/angular-jwt";
-import {Router} from "@angular/router";
+import { AUTH_API_URL } from '../app-injections-tokens';
+import { Token } from '../models/token.model';
 
 export const ACCESS_TOKEN_KEY = 'planner_access_token';
 
@@ -13,6 +13,8 @@ export const ACCESS_TOKEN_KEY = 'planner_access_token';
   providedIn: 'root'
 })
 export class AuthService {
+
+  private _token: string | null = null;
 
   constructor(
     private http: HttpClient,
@@ -27,25 +29,33 @@ export class AuthService {
     }).pipe(
       tap(token => {
         if (rememberMe) {
-          localStorage.setItem(ACCESS_TOKEN_KEY, token.access_token)
-          console.log("auth service: save token to the local storage")
-        }
-        else {
-          sessionStorage.setItem(ACCESS_TOKEN_KEY, token.access_token)
-          console.log("auth service: save token to the session storage")
+          localStorage.setItem(ACCESS_TOKEN_KEY, token.access_token);
+          console.log('auth service: save token to the local storage');
+        } else {
+          sessionStorage.setItem(ACCESS_TOKEN_KEY, token.access_token);
+          console.log('auth service: save token to the session storage');
         }
       })
     );
   }
 
-  isAuthenticated(): boolean {
-    let token = localStorage.getItem(ACCESS_TOKEN_KEY) ?? sessionStorage.getItem(ACCESS_TOKEN_KEY);
-    return token != null && !this.jwtHelper.isTokenExpired(token);
+  public get isAuthenticated(): boolean {
+    if (!this._token) {
+      this._token = localStorage.getItem(ACCESS_TOKEN_KEY) ?? sessionStorage.getItem(ACCESS_TOKEN_KEY);
+    }
+
+    return this._token != null && !this.jwtHelper.isTokenExpired(this._token);
+  }
+
+  public get email(): string | null {
+    return this._token
+      ? this.jwtHelper.decodeToken(this._token)['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name']
+      : null;
   }
 
   logout(): void {
     localStorage.removeItem(ACCESS_TOKEN_KEY);
     sessionStorage.removeItem(ACCESS_TOKEN_KEY);
-    this.router.navigate(['']);
+    this.router.navigate(['/login']);
   }
 }
