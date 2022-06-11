@@ -9,15 +9,15 @@ public class ActionModel
     public bool IsDone { get; set; }
     public bool IsFocused { get; set; }
     
-    public TimeSpan? TimeSpan { get; set; }
+    public int? TimeRequired { get; set; } // time in minutes 
     public EnergyLevelModel? Energy { get; set; }
     public DateTime? DueDate { get; set; }
     
-    public IEnumerable<ContactTagModel> ContactTags { get; set; }
-    public IEnumerable<AreaTagModel> AreaTags { get; set; }
-    public IEnumerable<LabelTagModel> LabelTags { get; set; }
+    public IEnumerable<ContactTagModel>? ContactTags { get; set; }
+    public IEnumerable<AreaTagModel>? AreaTags { get; set; }
+    public IEnumerable<LabelTagModel>? LabelTags { get; set; }
 
-    public ProjectModel? Project { get; set; }
+    // public ProjectModel? Project { get; set; }
     
     public ContactTagModel? WaitingContact { get; set; } // only with state Waiting
     public DateTime? ScheduledDate { get; set; } // only with state Scheduled

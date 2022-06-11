@@ -11,7 +11,6 @@ using Microsoft.EntityFrameworkCore;
 using Planner.Data;
 using Planner.Data.Entities;
 using PlannerAPI.Models;
-using PlannerAPI.Models.Actions;
 
 namespace PlannerAPI.Controllers
 {
@@ -21,14 +20,12 @@ namespace PlannerAPI.Controllers
     public class TrashActionsController : ControllerBase
     {
         private readonly PlannerContext _db;
-        private readonly UserManager<Account> _userManager;
         private readonly ILogger<TrashActionsController> _logger;
         private readonly IMapper _mapper;
 
-        public TrashActionsController(ILogger<TrashActionsController> logger, UserManager<Account> userManager, PlannerContext db, IMapper mapper)
+        public TrashActionsController(ILogger<TrashActionsController> logger,  PlannerContext db, IMapper mapper)
         {
             _db = db;
-            _userManager = userManager;
             _logger = logger;
             _mapper = mapper;
         }
@@ -36,9 +33,7 @@ namespace PlannerAPI.Controllers
         [HttpGet]
         public async Task<IEnumerable<TrashActionModel>> GetAllAsync(CancellationToken ct = default)
         {
-            // TODO: don't work
             return await _db.TrashActions.Where(x => x.Account.UserName == User.Identity!.Name)
-                .Include(x=> x.Account)
                 .ProjectTo<TrashActionModel>(_mapper.ConfigurationProvider).ToArrayAsync(ct);
         }
         

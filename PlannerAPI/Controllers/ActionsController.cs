@@ -60,20 +60,102 @@ namespace PlannerAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<ActionModel>> AddAsync(ActionModel model, CancellationToken ct = default)
         {
-            // TODO: validation 
+            // validation
+            if (model.State == ActionModel.ActionStateModel.Scheduled)
+            {
+                if (model.ScheduledDate is null)
+                    return BadRequest();
+                if (model.WaitingContact is not null)
+                    return BadRequest();
+            }
+            else if (model.State == ActionModel.ActionStateModel.Waiting)
+            {
+                if (model.WaitingContact is null)
+                    return BadRequest();
+                if (model.ScheduledDate is not null)
+                    return BadRequest();
+            }
+            else
+            {
+                if (model.WaitingContact is not null)
+                    return BadRequest();
+                if (model.ScheduledDate is not null)
+                    return BadRequest();
+            }
+            //////////////////////////////////////////////////////////////
+
             var entity = _mapper.Map<Action>(model);
-            entity.Id = 0;
+            entity.Id = default;
             entity.Account = await _userManager.FindByNameAsync(User.Identity!.Name);
+
+            var labelTags = await _db.Tags.AsNoTracking().Where(x => x.Account == entity.Account).ToArrayAsync(ct);
+            var areaTags = await _db.Areas.AsNoTracking().Where(x => x.Account == entity.Account).ToArrayAsync(ct);
+            var contactTags = await _db.Contacts.AsNoTracking().Where(x => x.Account == entity.Account).ToArrayAsync(ct);
+
+            foreach (var tag in entity.Tags)
+            {
+                if (labelTags.Select(x => x.Id).Contains(tag.Id))
+                {
+                    _db.Update(tag);
+                }
+                else
+                {
+                    tag.Id = default;
+                    _db.Add(tag);
+                }
+                tag.Account = entity.Account;
+            }
+            foreach (var area in entity.Areas)
+            {
+                if (areaTags.Select(x => x.Id).Contains(area.Id))
+                {
+                    _db.Update(area);
+                }
+                else
+                {
+                    area.Id = default;
+                    _db.Add(area);
+                }
+                area.Account = entity.Account;
+            }
+            foreach (var contact in entity.Contacts)
+            {
+                if (contactTags.Select(x => x.Id).Contains(contact.Id))
+                {
+                    _db.Update(contact);
+                }
+                else
+                {
+                    contact.Id = default;
+                    _db.Add(contact);
+                }
+                contact.Account = entity.Account;
+            }
             
+            // waiting contact
+            if (entity.WaitingContact is not null)
+            {
+                entity.WaitingContact.Account = entity.Account;
+                // if the contact id was not specified
+                if (entity.WaitingContact.Id == default)
+                {
+                    _db.Add(entity.WaitingContact);
+                }
+                // if the contact will be added or update by this transaction
+                else if (entity.Contacts.Select(x => x.Id).Contains(entity.WaitingContact.Id))
+                {
+                    entity.WaitingContact = entity.Contacts.First(x => x.Id == entity.WaitingContact.Id);
+                }
+                // if the contact was already in the database
+                else if (contactTags.Select(x => x.Id).Contains(entity.WaitingContact.Id))
+                {
+                    _db.Update(entity.WaitingContact);
+                }
+            }
+            //////////////////
+
+            entity.CreatedDate = DateTime.Now;
             _db.Actions.Add(entity);
-        
-            // switch (entity.State)
-            // {
-            //     case Action.ActionState.Waiting:
-            //         _db.WaitingActions.Add(new WaitingAction { Action = entity, Contact = _mapper.Map<Contact>(model.WaitingContact)});
-            //         break;
-            // }
-            
             await _db.SaveChangesAsync(ct);
         
             model.Id = entity.Id;
@@ -108,7 +190,7 @@ namespace PlannerAPI.Controllers
         
             _db.TrashActions.Add(new TrashAction
             {
-                Account = await _userManager.FindByNameAsync(User.Identity!.Name),
+                Account = entity.Account,
                 Name = entity.Text
             });
             
