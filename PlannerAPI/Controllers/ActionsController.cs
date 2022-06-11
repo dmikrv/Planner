@@ -49,6 +49,7 @@ namespace PlannerAPI.Controllers
                 .Include(x => x.Tags)
                 .Include(x => x.Contacts)
                 .Include(x => x.Areas)
+                .Include(x => x.WaitingContact)
                 .FirstOrDefaultAsync(x => x.Id == id, ct);
         
             if (entity is null || entity.Account.UserName != User.Identity!.Name)
@@ -60,34 +61,70 @@ namespace PlannerAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<ActionModel>> AddAsync(ActionModel model, CancellationToken ct = default)
         {
-            // validation
-            if (model.State == ActionModel.ActionStateModel.Scheduled)
-            {
-                if (model.ScheduledDate is null)
-                    return BadRequest();
-                if (model.WaitingContact is not null)
-                    return BadRequest();
-            }
-            else if (model.State == ActionModel.ActionStateModel.Waiting)
-            {
-                if (model.WaitingContact is null)
-                    return BadRequest();
-                if (model.ScheduledDate is not null)
-                    return BadRequest();
-            }
-            else
-            {
-                if (model.WaitingContact is not null)
-                    return BadRequest();
-                if (model.ScheduledDate is not null)
-                    return BadRequest();
-            }
-            //////////////////////////////////////////////////////////////
-
+            var result = Validate(model);
+            if (result is not null)
+                return result;
+            
             var entity = _mapper.Map<Action>(model);
             entity.Id = default;
+            entity.CreatedDate = DateTime.Now;
             entity.Account = await _userManager.FindByNameAsync(User.Identity!.Name);
 
+            await ConnectTrackingChildren(entity, ct);
+
+            _db.Actions.Add(entity);
+            await _db.SaveChangesAsync(ct);
+        
+            model.Id = entity.Id;
+            return CreatedAtAction(nameof(GetAsync), new { id = model.Id }, model);
+        }
+        
+        [HttpPut]
+        public async Task<ActionResult<ActionModel>> UpdateAsync(ActionModel model, CancellationToken ct = default)
+        {
+            var result = Validate(model);
+            if (result is not null)
+                return result;
+
+            var entity = await _db.Actions.AsNoTracking().Include(x => x.Account)
+                .FirstOrDefaultAsync(x => x.Id == model.Id, ct);
+
+            if (entity is null || entity.Account.UserName != User.Identity!.Name)
+                return await AddAsync(model, ct);
+            
+            var newEntity = _mapper.Map<Action>(model);
+            _db.Update(newEntity);
+            newEntity.CreatedDate = entity.CreatedDate;
+            newEntity.Account = await _userManager.FindByNameAsync(User.Identity!.Name);
+
+            await ConnectTrackingChildren(newEntity, ct);
+            await _db.SaveChangesAsync(ct);
+
+            return NoContent();
+        }
+        
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteAsync(long id, CancellationToken ct = default)
+        {
+            var entity = await _db.Actions.Include(x => x.Account)
+                .FirstOrDefaultAsync(x => x.Id == id, ct);
+        
+            if (entity is null || entity.Account.UserName != User.Identity!.Name)
+                return NoContent();
+        
+            _db.TrashActions.Add(new TrashAction
+            {
+                Account = entity.Account,
+                Name = entity.Text
+            });
+            
+            _db.Actions.Remove(entity);
+            await _db.SaveChangesAsync(ct);
+            return NoContent();
+        }
+
+        private async Task ConnectTrackingChildren(Action entity, CancellationToken ct = default)
+        {
             var labelTags = await _db.Tags.AsNoTracking().Where(x => x.Account == entity.Account).ToArrayAsync(ct);
             var areaTags = await _db.Areas.AsNoTracking().Where(x => x.Account == entity.Account).ToArrayAsync(ct);
             var contactTags = await _db.Contacts.AsNoTracking().Where(x => x.Account == entity.Account).ToArrayAsync(ct);
@@ -152,51 +189,34 @@ namespace PlannerAPI.Controllers
                     _db.Update(entity.WaitingContact);
                 }
             }
-            //////////////////
-
-            entity.CreatedDate = DateTime.Now;
-            _db.Actions.Add(entity);
-            await _db.SaveChangesAsync(ct);
-        
-            model.Id = entity.Id;
-            return CreatedAtAction(nameof(GetAsync), new { id = model.Id }, model);
         }
-        
-        // [HttpPut]
-        // public async Task<ActionResult<LabelTagModel>> UpdateAsync(LabelTagModel model, CancellationToken ct = default)
-        // {
-        //     var entity = await _db.Tags.Include(x => x.Account)
-        //         .FirstOrDefaultAsync(x => x.Id == model.Id, ct);
-        //
-        //     if (entity is null || entity.Account.UserName != User.Identity!.Name)
-        //         return await AddAsync(model, ct);
-        //
-        //     entity.Name = model.Name;
-        //     entity.Color = _mapper.Map<Color>(model.Color);
-        //     
-        //     _db.Tags.Update(entity);
-        //     await _db.SaveChangesAsync(ct);
-        //     
-        //     return NoContent();
-        // }
-        
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteAsync(long id, CancellationToken ct = default)
+
+        private ActionResult? Validate(ActionModel model)
         {
-            var entity = await _db.Actions.Include(x => x.Account).FirstOrDefaultAsync(x => x.Id == id, ct);
-        
-            if (entity is null || entity.Account.UserName != User.Identity!.Name)
-                return NoContent();
-        
-            _db.TrashActions.Add(new TrashAction
+            // validation
+            if (model.State == ActionModel.ActionStateModel.Scheduled)
             {
-                Account = entity.Account,
-                Name = entity.Text
-            });
-            
-            _db.Actions.Remove(entity);
-            await _db.SaveChangesAsync(ct);
-            return NoContent();
+                if (model.ScheduledDate is null)
+                    return BadRequest();
+                if (model.WaitingContact is not null)
+                    return BadRequest();
+            }
+            else if (model.State == ActionModel.ActionStateModel.Waiting)
+            {
+                if (model.WaitingContact is null)
+                    return BadRequest();
+                if (model.ScheduledDate is not null)
+                    return BadRequest();
+            }
+            else
+            {
+                if (model.WaitingContact is not null)
+                    return BadRequest();
+                if (model.ScheduledDate is not null)
+                    return BadRequest();
+            }
+
+            return null;
         }
     }
 }
