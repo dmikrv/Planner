@@ -46,7 +46,7 @@ namespace Planner.Data
                 entity.HasOne(p => p.WaitingContact)
                     .WithMany(p => p.WaitingActions)
                     .HasForeignKey(d => d.WaitingContactId)
-                    .OnDelete(DeleteBehavior.Cascade);
+                    .OnDelete(DeleteBehavior.Restrict);
 
                 // entity.HasOne(d => d.Project)
                 //     .WithMany(p => p.Actions)
