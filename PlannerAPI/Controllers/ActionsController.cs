@@ -72,10 +72,10 @@ namespace PlannerAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<ActionModel>> AddAsync(ActionModel model, CancellationToken ct = default)
         {
-            var result = Validate(model);
+            var result = await Validate(model, ct);
             if (result is not null)
                 return result;
-            
+
             var entity = _mapper.Map<Action>(model);
             entity.Id = default;
             entity.CreatedDate = DateTime.Now;
@@ -93,7 +93,7 @@ namespace PlannerAPI.Controllers
         [HttpPut]
         public async Task<ActionResult<ActionModel>> UpdateAsync(ActionModel model, CancellationToken ct = default)
         {
-            var result = Validate(model);
+            var result = await Validate(model, ct);
             if (result is not null)
                 return result;
 
@@ -202,7 +202,7 @@ namespace PlannerAPI.Controllers
             }
         }
 
-        private ActionResult? Validate(ActionModel model)
+        private async Task<ActionResult?> Validate(ActionModel model, CancellationToken ct = default)
         {
             // validation
             if (model.State == ActionModel.ActionStateModel.Scheduled)
@@ -226,7 +226,12 @@ namespace PlannerAPI.Controllers
                 if (model.ScheduledDate is not null)
                     return BadRequest();
             }
-
+            
+            var project = await _db.Projects.AsNoTracking().Include(x => x.Account)
+                .FirstOrDefaultAsync(x => x.Id == model.ProjectId, ct);
+            if (project is null || project.Account.UserName != User.Identity!.Name)
+                return BadRequest();
+            
             return null;
         }
     }
