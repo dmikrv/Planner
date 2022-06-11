@@ -17,7 +17,7 @@ public class ActionModel
     public IEnumerable<AreaTagModel>? AreaTags { get; set; }
     public IEnumerable<LabelTagModel>? LabelTags { get; set; }
 
-    // public ProjectModel? Project { get; set; }
+    public long? ProjectId { get; set; }
     
     public ContactTagModel? WaitingContact { get; set; } // only with state Waiting
     public DateTime? ScheduledDate { get; set; } // only with state Scheduled

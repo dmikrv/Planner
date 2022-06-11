@@ -24,7 +24,7 @@ namespace Planner.Data.Entities
         public enum ProjectState
         {
             Active,
-            Scheduled,
+            // Scheduled,
             Someday,
         }
     }

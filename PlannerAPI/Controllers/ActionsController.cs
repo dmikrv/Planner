@@ -33,12 +33,7 @@ namespace PlannerAPI.Controllers
             _logger = logger;
             _mapper = mapper;
         }
-
-        // public class QueryParameters
-        // {
-        //     public ActionModel.ActionStateModel State { get; set; }
-        // }
-
+        
         [HttpGet]
         public async Task<IEnumerable<ActionModel>> GetAllAsync([FromQuery, Required]ActionModel.ActionStateModel state, CancellationToken ct = default)
         {

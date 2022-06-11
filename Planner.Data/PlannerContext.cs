@@ -21,7 +21,7 @@ namespace Planner.Data
         public virtual DbSet<Action> Actions { get; set; } = null!;
         public virtual DbSet<Area> Areas { get; set; } = null!;
         public virtual DbSet<Contact> Contacts { get; set; } = null!;
-        // public virtual DbSet<Project> Projects { get; set; } = null!;
+        public virtual DbSet<Project> Projects { get; set; } = null!;
         public virtual DbSet<Tag> Tags { get; set; } = null!;
         public virtual DbSet<TrashAction> TrashActions { get; set; } = null!;
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -48,10 +48,10 @@ namespace Planner.Data
                     .HasForeignKey(d => d.WaitingContactId)
                     .OnDelete(DeleteBehavior.Restrict);
 
-                // entity.HasOne(d => d.Project)
-                //     .WithMany(p => p.Actions)
-                //     .HasForeignKey(d => d.ProjectId)
-                //     .OnDelete(DeleteBehavior.Cascade);
+                entity.HasOne(d => d.Project)
+                    .WithMany(p => p.Actions)
+                    .HasForeignKey(d => d.ProjectId)
+                    .OnDelete(DeleteBehavior.SetNull);
 
                 entity.HasMany(d => d.Areas)
                     .WithMany(p => p.Actions);
@@ -95,7 +95,7 @@ namespace Planner.Data
                 entity.Property(e => e.DueDate).HasColumnType("date");
                 entity.Property(e => e.Name);
                 entity.Property(e => e.Notes);
-                entity.Property(e => e.State);
+                // entity.Property(e => e.State);
 
                 entity.HasOne(d => d.Account)
                     .WithMany(p => p.Projects)

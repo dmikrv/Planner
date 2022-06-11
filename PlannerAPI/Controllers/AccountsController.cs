@@ -90,7 +90,7 @@ public class AccountsController : ControllerBase
             {
                 Name = "My new project",
                 Notes = "my project notes",
-                State = Project.ProjectState.Active,
+                // State = Project.ProjectState.Active,
                 CreatedDate = DateTime.Now,
             }
         });
