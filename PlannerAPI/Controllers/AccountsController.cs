@@ -37,11 +37,9 @@ public class AccountsController : ControllerBase
     [Route("signup")]
     public async Task<ActionResult> SignupAsync(RegisterModel accountModel)
     {
-        // TODO
         var search = await _userManager.FindByNameAsync(accountModel.Email);
         if (search is not null)
-            // TODO: такой пользователь уже есть
-            return BadRequest();
+            return Conflict();
 
         var account = new Account { UserName = accountModel.Email, Email = accountModel.Email };
         var result = await _userManager.CreateAsync(account, accountModel.Password);
