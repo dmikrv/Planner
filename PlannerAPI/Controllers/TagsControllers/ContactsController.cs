@@ -85,11 +85,21 @@ namespace PlannerAPI.Controllers.TagsControllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteAsync(long id, CancellationToken ct = default)
         {
-            var entity = await _db.Contacts.Include(x => x.Account).FirstOrDefaultAsync(x => x.Id == id, ct);
+            var account = await _userManager.FindByNameAsync(User.Identity!.Name);
+
+            var entity = await _db.Contacts.Include(x => x.Account)
+                .FirstOrDefaultAsync(x => x.Id == id, ct);
         
             if (entity is null || entity.Account.UserName != User.Identity!.Name)
                 return NoContent();
-        
+
+            var someoneEntity = await _db.Contacts.Include(x => x.Account)
+                                    .FirstOrDefaultAsync(x => x.Name == "Someone" && x.Account == account, ct) 
+                                ?? new Contact { Name = "Someone", Account = account };
+
+            await account.Actions.AsQueryable().Where(x => x.WaitingContact == entity)
+                .ForEachAsync(x => x.WaitingContact = someoneEntity, ct);
+            
             _db.Contacts.Remove(entity);
             await _db.SaveChangesAsync(ct);
             return NoContent();

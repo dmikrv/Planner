@@ -12,7 +12,7 @@ namespace Planner.Data.Entities
 
         public virtual Account Account { get; set; } = null!;
         public virtual ICollection<Action> Actions { get; set; }
-        // public virtual Action? WaitingAction { get; set; } = null!;
+        public virtual ICollection<Action>? WaitingActions { get; set; } = null!;
 
     }
 }

@@ -43,7 +43,8 @@ namespace PlannerAPI.Controllers.TagsControllers
         [ActionName("GetAsync")]
         public async Task<ActionResult<AreaTagModel>> GetAsync(long id, CancellationToken ct = default)
         {
-            var entity = await _db.Areas.Include(x => x.Account).FirstOrDefaultAsync(x => x.Id == id, ct);
+            var entity = await _db.Areas.Include(x => x.Account)
+                .FirstOrDefaultAsync(x => x.Id == id, ct);
 
             if (entity is null || entity.Account.UserName != User.Identity!.Name)
                 return Forbid();
@@ -68,11 +69,12 @@ namespace PlannerAPI.Controllers.TagsControllers
         [HttpPut]
         public async Task<ActionResult<AreaTagModel>> UpdateAsync(AreaTagModel model, CancellationToken ct = default)
         {
-            var entity = await _db.Areas.Include(x => x.Account).FirstOrDefaultAsync(x => x.Id == model.Id, ct);
+            var entity = await _db.Areas.Include(x => x.Account)
+                .FirstOrDefaultAsync(x => x.Id == model.Id, ct);
         
             if (entity is null || entity.Account.UserName != User.Identity!.Name)
                 return await AddAsync(model, ct);
-
+        
             entity.Name = model.Name;
             entity.Color = _mapper.Map<Color>(model.Color);
             
@@ -85,7 +87,8 @@ namespace PlannerAPI.Controllers.TagsControllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteAsync(long id, CancellationToken ct = default)
         {
-            var entity = await _db.Areas.Include(x => x.Account).FirstOrDefaultAsync(x => x.Id == id, ct);
+            var entity = await _db.Areas.Include(x => x.Account)
+                .FirstOrDefaultAsync(x => x.Id == id, ct);
         
             if (entity is null || entity.Account.UserName != User.Identity!.Name)
                 return NoContent();
