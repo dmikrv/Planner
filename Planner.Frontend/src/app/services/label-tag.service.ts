@@ -15,7 +15,7 @@ export class LabelTagService {
     @Inject(RESOURCE_API_URL) private apiUrl: string,
   ) { }
 
-  getAll(): Observable<LabelTag[]> {
+  get(): Observable<LabelTag[]> {
     return this.http.get<LabelTag[]>(`${this.apiUrl}/api/tags/labels`);
   }
 
@@ -23,7 +23,7 @@ export class LabelTagService {
     return this.http.post<LabelTag>(`${this.apiUrl}/api/tags/labels`, label);
   }
 
-  put(label: LabelTag): Observable<LabelTag> {
+  update(label: LabelTag): Observable<LabelTag> {
     return this.http.put<LabelTag>(`${this.apiUrl}/api/tags/labels/${label.id}`, label);
   }
 

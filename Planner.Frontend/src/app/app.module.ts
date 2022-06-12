@@ -69,6 +69,7 @@ export function tokenGetter() {
     MatSidenavModule,
     MatExpansionModule,
     MatDividerModule,
+    MatFormFieldModule,
 
     ActionsModule,
     TagsModule,
