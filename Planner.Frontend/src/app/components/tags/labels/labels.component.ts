@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { MatTableDataSource } from '@angular/material/table';
 
-import {LabelTagService} from "../../../services/label-tag.service";
-import {LabelTag} from "../../../models/label.tag.model";
-
-import {Observable} from "rxjs";
-import {BaseTagColumns} from "../../../models/base.tag.model";
-import {MatTableDataSource} from "@angular/material/table";
+import { BaseTagColumns } from '../../../models/base.tag.model';
+import { LabelTag } from '../../../models/label.tag.model';
+import { LabelTagService } from '../../../services/label-tag.service';
 
 @Component({
   selector: 'app-labels',
@@ -23,7 +21,7 @@ export class LabelsComponent implements OnInit {
   ngOnInit(): void {
     this.resService.get().subscribe((res: any) => {
       this.dataSource.data = res;
-    })
+    });
   }
 
   editRow(row: LabelTag) {

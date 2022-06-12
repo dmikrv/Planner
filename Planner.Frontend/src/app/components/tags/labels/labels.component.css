@@ -6,27 +6,29 @@
 p {
   font-family: Lato;
 }
+
 table {
-  width: 90%;
-  margin: auto;
-  margin-top: 25px;
+  width: 100%;
+  background: #fafafa;
 }
+
+.table-buttons {
+  display: flex;
+  flex-direction: row;
+  margin: 8px;
+}
+
+.flex-spacer {
+  flex-grow: 1;
+}
+
 .btn-edit {
   text-align: right;
 }
+
 h2 {
   text-align: center;
   padding-top: 20px;
-}
-
-.table-header {
-  width: 90%;
-  margin: auto;
-  text-align: right;
-  margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
 }
 
 .button-add-row {
@@ -50,4 +52,8 @@ h2 {
 
 .form-input {
   padding-right: 5px;
+}
+
+.form-select {
+  min-width: 128px;
 }
