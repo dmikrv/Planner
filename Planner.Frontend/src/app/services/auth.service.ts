@@ -53,9 +53,9 @@ export class AuthService {
       : null;
   }
 
-  logout(): void {
+  async logout() {
     localStorage.removeItem(ACCESS_TOKEN_KEY);
     sessionStorage.removeItem(ACCESS_TOKEN_KEY);
-    this.router.navigate(['/login']);
+    await this.router.navigate(['/login']);
   }
 }

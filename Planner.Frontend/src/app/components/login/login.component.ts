@@ -29,7 +29,8 @@ export class LoginComponent implements OnInit {
       const username = this.form.get('username')!.value;
       const password = this.form.get('password')!.value;
       const rememberMe = this.form.get('rememberMe')!.value;
-      await this.as.login(username, password, rememberMe)
+
+      this.as.login(username, password, rememberMe)
         .subscribe(res => { this.router.navigate(['']) },
           error => { this.loginInvalid = true; });
 
