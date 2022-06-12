@@ -226,11 +226,14 @@ namespace PlannerAPI.Controllers
                 if (model.ScheduledDate is not null)
                     return BadRequest();
             }
-            
-            var project = await _db.Projects.AsNoTracking().Include(x => x.Account)
-                .FirstOrDefaultAsync(x => x.Id == model.ProjectId, ct);
-            if (project is null || project.Account.UserName != User.Identity!.Name)
-                return BadRequest();
+
+            if (model.ProjectId is not null)
+            {
+                var project = await _db.Projects.AsNoTracking().Include(x => x.Account)
+                    .FirstOrDefaultAsync(x => x.Id == model.ProjectId, ct);
+                if (project is null || project.Account.UserName != User.Identity!.Name)
+                    return BadRequest();
+            }
             
             return null;
         }
