@@ -12,10 +12,13 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 
 import { LabelsComponent } from './labels/labels.component';
+import { ConfirmDeleteDialogComponent } from '../confirm-delete-dialog/confirm-delete-dialog.component';
+import {MatDialogModule} from "@angular/material/dialog";
 
 @NgModule({
   declarations: [
-    LabelsComponent
+    LabelsComponent,
+    ConfirmDeleteDialogComponent,
   ],
   imports: [
     CommonModule,
@@ -29,6 +32,7 @@ import { LabelsComponent } from './labels/labels.component';
     MatSelectModule,
     MatButtonModule,
     MatIconModule,
+    MatDialogModule,
   ]
 })
 export class TagsModule { }

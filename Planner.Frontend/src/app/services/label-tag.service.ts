@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import {forkJoin, Observable} from 'rxjs';
 
 import { RESOURCE_API_URL } from '../app-injections-tokens';
 import { LabelTag } from '../models/label.tag.model';
@@ -31,4 +31,11 @@ export class LabelTagService {
     return this.http.delete(`${this.apiUrl}/api/tags/labels/${id}`);
   }
 
+  deleteMany(labels: LabelTag[]) {
+    return forkJoin(
+      labels.map((label) =>
+        this.http.delete<LabelTag>(`${this.apiUrl}/api/tags/labels/${label.id}`)
+      )
+    );
+  }
 }

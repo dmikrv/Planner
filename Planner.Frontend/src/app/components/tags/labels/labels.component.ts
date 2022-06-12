@@ -4,6 +4,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { BaseTagColumns } from '../../../models/base.tag.model';
 import { LabelTag } from '../../../models/label.tag.model';
 import { LabelTagService } from '../../../services/label-tag.service';
+import {MatDialog} from "@angular/material/dialog";
+import {ConfirmDeleteDialogComponent} from "../../confirm-delete-dialog/confirm-delete-dialog.component";
 
 @Component({
   selector: 'app-labels',
@@ -16,12 +18,16 @@ export class LabelsComponent implements OnInit {
   dataSource = new MatTableDataSource<LabelTag>();
   valid: any = {};
 
-  constructor(private resService: LabelTagService) { }
+  constructor(public dialog: MatDialog, private resService: LabelTagService) { }
 
   ngOnInit(): void {
     this.resService.get().subscribe((res: any) => {
       this.dataSource.data = res;
     });
+  }
+
+  get isAnySelected(): boolean {
+    return this.dataSource.data.filter((u: LabelTag) => u.isSelected).length > 0;
   }
 
   editRow(row: LabelTag) {
@@ -38,7 +44,7 @@ export class LabelsComponent implements OnInit {
   addRow() {
     const newRow: LabelTag = {
       id: 0,
-      name: 'new raw',
+      name: 'new row',
       color: undefined,
       isEdit: true,
       isSelected: false,
@@ -54,21 +60,21 @@ export class LabelsComponent implements OnInit {
     });
   }
 
-  // removeSelectedRows() {
-  //   const tags = this.dataSource.data.filter((u: LabelTag) => u.isSelected);
-  //   this.dialog
-  //     .open(ConfirmDialogComponent)
-  //     .afterClosed()
-  //     .subscribe((confirm) => {
-  //       if (confirm) {
-  //         this.userService.deleteUsers(users).subscribe(() => {
-  //           this.dataSource.data = this.dataSource.data.filter(
-  //             (u: User) => !u.isSelected
-  //           );
-  //         });
-  //       }
-  //     });
-  // }
+  removeSelectedRows() {
+    const rows = this.dataSource.data.filter((u: LabelTag) => u.isSelected);
+    this.dialog
+      .open(ConfirmDeleteDialogComponent)
+      .afterClosed()
+      .subscribe((confirm) => {
+        if (confirm) {
+          this.resService.deleteMany(rows).subscribe(() => {
+            this.dataSource.data = this.dataSource.data.filter(
+              (u: LabelTag) => !u.isSelected
+            );
+          });
+        }
+      });
+  }
 
   inputHandler(e: any, id: number, key: string) {
     if (!this.valid[id]) {

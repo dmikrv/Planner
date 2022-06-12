@@ -19,10 +19,7 @@ public class ActionModel
 
     public long? ProjectId { get; set; }
     
-    public ContactTagModel? WaitingContact { get; set; } // only with state Waitinfsdf
-                                                         // sdf
-                                                         // sdf
-                                                         // g
+    public ContactTagModel? WaitingContact { get; set; } // only with state Waiting 
     public DateTime? ScheduledDate { get; set; } // only with state Scheduled
     
     public enum ActionStateModel
