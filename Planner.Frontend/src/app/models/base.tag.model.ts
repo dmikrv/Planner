@@ -1,4 +1,4 @@
-import { Color } from "./color.model";
+import { Color } from './color.model';
 
 export interface BaseTag {
   id: number,
@@ -24,8 +24,9 @@ export const BaseTagColumns = [
   },
   {
     key: 'color',
-    type: 'text',
+    type: 'select',
     label: 'Color',
+    selectItems: [null, ...Object.values(Color).filter(o => typeof (o) === 'string')]
   },
 
 
