@@ -13,11 +13,13 @@ import {MatInputModule} from "@angular/material/input";
 import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
 import {MatDialogModule} from "@angular/material/dialog";
+import {BaseTableComponent} from './tables/base/base.component';
 
 @NgModule({
   declarations: [
     NextComponent,
     TrashComponent,
+    BaseTableComponent,
   ],
   imports: [
     CommonModule,

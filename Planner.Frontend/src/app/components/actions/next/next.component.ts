@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {ActionState} from "../../../models/state.action.model";
 
 @Component({
   selector: 'app-next',
@@ -6,6 +7,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./next.component.css']
 })
 export class NextComponent implements OnInit {
+  state: ActionState = ActionState.Next;
 
   constructor() { }
 

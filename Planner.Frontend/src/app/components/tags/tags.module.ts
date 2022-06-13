@@ -14,10 +14,14 @@ import { MatTableModule } from '@angular/material/table';
 import { LabelsComponent } from './labels/labels.component';
 import { ConfirmDeleteDialogComponent } from '../confirm-delete-dialog/confirm-delete-dialog.component';
 import {MatDialogModule} from "@angular/material/dialog";
+import {ContactsComponent} from "./contacts/contacts.component";
+import {AreasComponent} from "./areas/areas.component";
 
 @NgModule({
   declarations: [
     LabelsComponent,
+    ContactsComponent,
+    AreasComponent,
     ConfirmDeleteDialogComponent,
   ],
   imports: [

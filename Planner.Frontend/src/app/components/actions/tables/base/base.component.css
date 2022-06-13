@@ -1,0 +1,59 @@
+.loading {
+  text-align: center;
+  margin: 16px;
+}
+
+p {
+  font-family: Lato;
+}
+
+table {
+  width: 100%;
+  background: #fafafa;
+}
+
+.table-buttons {
+  display: flex;
+  flex-direction: row;
+  margin: 8px;
+}
+
+.flex-spacer {
+  flex-grow: 1;
+}
+
+.btn-edit {
+  text-align: right;
+}
+
+h2 {
+  text-align: center;
+  padding-top: 20px;
+}
+
+.button-add-row {
+  background: #1b9e1b;
+  color: #ffffff;
+}
+
+.button-remove-rows {
+  background: red;
+  color: #ffffff;
+  margin-right: 5px;
+}
+
+.button-remove {
+  color: red;
+}
+
+::ng-deep .mat-form-field-infix {
+  width: 100% !important;
+}
+
+.form-input {
+  padding-right: 5px;
+}
+
+.form-select {
+  min-width: 128px;
+}
