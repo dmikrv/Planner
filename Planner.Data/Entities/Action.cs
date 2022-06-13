@@ -32,6 +32,7 @@
         public virtual ICollection<Contact>? Contacts { get; set; }
         public virtual Contact? WaitingContact { get; set; }
         
+        
         public enum ActionState
         {
             Inbox,

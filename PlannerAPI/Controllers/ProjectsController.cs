@@ -88,7 +88,7 @@ namespace PlannerAPI.Controllers
         }
         
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteAsync(long id, [FromQuery]bool deleteAll, CancellationToken ct = default)
+        public async Task<ActionResult> DeleteAsync(long id, [FromQuery]bool deleteAllAction, CancellationToken ct = default)
         {
             var entity = await _db.Projects.Include(x => x.Account)
                 .FirstOrDefaultAsync(x => x.Id == id, ct);
@@ -96,7 +96,7 @@ namespace PlannerAPI.Controllers
             if (entity is null || entity.Account.UserName != User.Identity!.Name)
                 return NoContent();
         
-            if (deleteAll)
+            if (deleteAllAction)
                 _db.Actions.RemoveRange(_db.Actions.Where(x => x.ProjectId == id));
             
             _db.Projects.Remove(entity);

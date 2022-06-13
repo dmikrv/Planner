@@ -47,7 +47,7 @@ public class AutoMapperProfile : Profile
             .ForMember(d => d.LabelTags, o 
                 => o.MapFrom(s => s.Tags ))
             .ReverseMap();
-
+        
         CreateMap<Project, ProjectModel>().ReverseMap();
     }
 }
