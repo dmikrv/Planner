@@ -47,7 +47,7 @@ export class LoginComponent implements OnInit {
     });
 
     if (this.as.isAuthenticated) {
-      await this.router.navigate(['']);
+      this.router.navigate(['']);
     }
   }
 }

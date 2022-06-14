@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 import { AuthService } from '../services/auth.service';
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-nav-bar',
@@ -13,15 +14,13 @@ export class NavBarComponent implements OnInit {
 
   @Output() sidebarToggle = new EventEmitter();
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, private router: Router) { }
 
   ngOnInit(): void {
   }
 
   public logout(): void {
-    if (this.authService.isAuthenticated) {
-      this.authService.logout();
-    }
+    this.router.navigate(['/logout']);
   }
 
   public get isAuthenticated(): boolean {

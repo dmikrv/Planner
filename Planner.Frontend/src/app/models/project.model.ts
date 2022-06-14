@@ -4,6 +4,6 @@ export interface Project {
   id: number,
   name: string,
   notes?: string,
-  duedate?: Date,
+  dueDate?: Date,
   state: ProjectState
 }

@@ -28,6 +28,8 @@ import { LoginComponent } from './components/login/login.component';
 import { TagsModule } from './components/tags/tags.module';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { ACCESS_TOKEN_KEY } from './services/auth.service';
+import {MatChipsModule} from "@angular/material/chips";
+import { LogoutComponent } from './components/logout/logout.component';
 
 export function tokenGetter() {
   return localStorage.getItem(ACCESS_TOKEN_KEY) ?? sessionStorage.getItem(ACCESS_TOKEN_KEY);
@@ -37,7 +39,8 @@ export function tokenGetter() {
   declarations: [
     AppComponent,
     LoginComponent,
-    NavBarComponent
+    NavBarComponent,
+    LogoutComponent
   ],
   imports: [
     BrowserModule,
@@ -70,10 +73,10 @@ export function tokenGetter() {
     MatExpansionModule,
     MatDividerModule,
     MatFormFieldModule,
+    MatChipsModule,
 
     ActionsModule,
     TagsModule,
-
   ],
   providers: [{
     provide: AUTH_API_URL,

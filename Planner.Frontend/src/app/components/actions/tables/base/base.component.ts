@@ -1,9 +1,10 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from '@angular/material/table';
 
 import {Action, BaseActionColumns} from "../../../../models/action.model";
 import {ActionService} from "../../../../services/action.service";
 import {ActionState} from "../../../../models/state.action.model";
+
 
 @Component({
   selector: 'app-base-table',
@@ -21,12 +22,17 @@ export class BaseTableComponent implements OnInit {
   constructor(private resService: ActionService) { }
 
   ngOnInit(): void {
-    this.resService.get(this.state).subscribe((res: any) => {
+    this.resService.get(this.state).subscribe((res: Action[]) => {
       this.dataSource.data = res;
     });
   }
 
   editRow(row: Action) {
+    if (row.dueDate) {
+      const d = new Date(row.dueDate)
+      row.dueDate = new Date(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes() - d.getTimezoneOffset());
+    }
+
     if (row.id === 0) {
       this.resService.add(row).subscribe((newRow: Action) => {
         row.id = newRow.id;
@@ -34,6 +40,7 @@ export class BaseTableComponent implements OnInit {
       });
     } else {
       this.resService.update(row).subscribe((res) => {row.id = res.id; row.isEdit = false});
+      console.log("update", row);
     }
   }
 
@@ -45,6 +52,9 @@ export class BaseTableComponent implements OnInit {
       isDone: false,
       isFocused: false,
       isEdit: true,
+      labelTags: [],
+      areaTags: [],
+      contactTags: []
     };
     this.dataSource.data = [newRow, ...this.dataSource.data];
   }
@@ -57,11 +67,21 @@ export class BaseTableComponent implements OnInit {
     });
   }
 
-  inputHandler(e: any, id: number, key: string) {
-    if (!this.valid[id]) {
-      this.valid[id] = {};
+  inputHandler(e: any, element: Action, key: string) {
+    if (!this.valid[element.id]) {
+      this.valid[element.id] = {};
     }
-    this.valid[id][key] = e.target.validity.valid;
+    this.valid[element.id][key] = e.target.validity.valid;
+  }
+
+  isDone(e: any, element: Action) {
+    element.isDone = e.checked;
+    this.resService.update(element).subscribe((res) => {element.id = res.id;});
+  }
+
+  isFocused(e: any, element: Action) {
+    element.isFocused = e.checked;
+    this.resService.update(element).subscribe((res) => {element.id = res.id;});
   }
 
   disableSubmit(id: number) {
@@ -70,5 +90,4 @@ export class BaseTableComponent implements OnInit {
     }
     return false;
   }
-
 }

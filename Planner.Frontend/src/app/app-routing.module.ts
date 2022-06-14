@@ -8,11 +8,14 @@ import {TrashComponent} from "./components/actions/trash/trash.component";
 import {ContactsComponent} from "./components/tags/contacts/contacts.component";
 import {AreasComponent} from "./components/tags/areas/areas.component";
 import {NextComponent} from "./components/actions/next/next.component";
+import {LogoutComponent} from "./components/logout/logout.component";
+import {LogoutGuard} from "./services/logout-guard.service";
 
 
 const routes: Routes = [
   { path: '', redirectTo: 'list/next', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
+  { path: 'logout', component: LogoutComponent },
   // { path: 'list/inbox', component: LabelsComponent, canActivate: [AuthGuardService] },
   { path: 'list/next', component: NextComponent, canActivate: [AuthGuardService] },
   { path: 'list/trash', component: TrashComponent, canActivate: [AuthGuardService] },

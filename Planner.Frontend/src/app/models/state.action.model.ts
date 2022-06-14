@@ -1,7 +1,7 @@
 export enum ActionState {
-  Inbox,
-  Next,
-  Waiting,
-  Scheduled,
-  Someday
+  Inbox = "Inbox",
+  Next = "Next",
+  Waiting = "Waiting",
+  Scheduled = "Scheduled",
+  Someday = "Someday"
 }

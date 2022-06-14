@@ -1,0 +1,31 @@
+<mat-form-field class="form-input">
+  <mat-label>Tag label</mat-label>
+
+  <mat-chip-list #chipList>
+    <mat-chip *ngFor="let tag of action.areaTags" (removed)="removeAreaTag(tag.id)">
+      {{tag.name}}
+      <mat-icon matChipRemove>cancel</mat-icon>
+    </mat-chip>
+    <mat-chip *ngFor="let tag of action.labelTags" (removed)="removeLabelTag(tag.id)">
+      {{tag.name}}
+      <mat-icon matChipRemove>cancel</mat-icon>
+    </mat-chip>
+    <mat-chip *ngFor="let tag of action.contactTags" (removed)="removeContactTag(tag.id)">
+      {{tag.name}}
+      <mat-icon matChipRemove>cancel</mat-icon>
+    </mat-chip>
+
+    <input #tagInput placeholder="New tag..."
+           [formControl]="tagCtrl"
+           [matChipInputFor]="chipList"
+           [matAutocomplete]="auto"
+           [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+           (matChipInputTokenEnd)="addTag($event)">
+
+  </mat-chip-list>
+  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedTag($event)">
+    <mat-option *ngFor="let tag of filteredTags | async" [value]="tag">
+      {{tag.name}}
+    </mat-option>
+  </mat-autocomplete>
+</mat-form-field>

@@ -33,10 +33,8 @@ export class ActionService {
   }
 
   update(action: Action): Observable<Action> {
-    return this.http.delete(`${this.apiUrl}/api/actions/${action.id}`).pipe(
-        tap(console.log),
+    return this.http.delete(`${this.apiUrl}/api/actions/${action.id}?toTrashAction=false`).pipe(
       switchMap(() => this.http.post<Action>(`${this.apiUrl}/api/actions`, action)),
-      tap(console.log),
   );
   }
 
