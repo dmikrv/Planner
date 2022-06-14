@@ -14,7 +14,7 @@
         public string? Notes { get; set; }
         public bool IsDone { get; set; }
         public bool IsFocused { get; set; }
-        public int? TimeRequired { get; set; } // time in minutes 
+        public string? TimeRequired { get; set; } 
         public EnergyLevel? Energy { get; set; }
         public DateTime? DueDate { get; set; }
         public ActionState State { get; set; }

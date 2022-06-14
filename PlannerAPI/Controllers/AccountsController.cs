@@ -73,7 +73,7 @@ public class AccountsController : ControllerBase
                 Text = "Welcome to Planner",
                 IsFocused = true,
                 Notes = "notes", 
-                TimeRequired = 10, 
+                TimeRequired = "10 minutes", 
                 State = Action.ActionState.Next,
                 Energy = Action.EnergyLevel.Middle,
                 CreatedDate = DateTime.Now,

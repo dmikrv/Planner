@@ -88,6 +88,9 @@ namespace PlannerAPI.Controllers
             entity.Id = default;
             entity.CreatedDate = DateTime.Now;
             entity.Account = await _userManager.FindByNameAsync(User.Identity!.Name);
+
+            if (string.IsNullOrEmpty(entity.Text))
+                entity.Text = "To do";
         
             await ConnectTrackingChildren(entity, ct);
         
@@ -98,59 +101,10 @@ namespace PlannerAPI.Controllers
             return CreatedAtAction(nameof(GetAsync), new { id = model.Id }, model);
         }
 
-        // [HttpPut]
-        // public async Task<ActionResult<ActionModel>> UpdateAsync(ActionModel model, CancellationToken ct = default)
-        // {
-        //     var result = await Validate(model, ct);
-        //     if (result is not null)
-        //         return result;
-        //     
-        //     var entity = await _db.Actions.Include(x => x.Account)
-        //         .Include(x => x.Tags)
-        //         .Include(x => x.Areas)
-        //         .Include(x => x.Contacts)
-        //         .FirstOrDefaultAsync(x => x.Id == model.Id, ct);
-        //     
-        //     if (entity is not null && entity.Account.UserName == User.Identity!.Name)
-        //         _db.Actions.Remove(entity);
-        //     _db.Entry(entity).State = EntityState.Detached;
-        //
-        //     return await AddAsync(model, ct);
-        //
-        //
-        //
-        //     // var entity = await _db.Actions.Include(x => x.Account)
-        //     //     .Include(x => x.Tags)
-        //     //     .Include(x => x.Areas)
-        //     //     .Include(x => x.Contacts)
-        //     //     .FirstOrDefaultAsync(x => x.Id == model.Id, ct);
-        //     //
-        //     // // if (entity is null || entity.Account.UserName != User.Identity!.Name)
-        //     // //     return await AddAsync(model, ct);
-        //     //
-        //     // if (!model.LabelTagIds.All(x => entity.Account.Tags.Select(y => y.Id).Contains(x)))
-        //     //     return BadRequest("tag id is not your");
-        //     //
-        //     // entity.Text = model.Text;
-        //     // entity.Notes = model.Notes;
-        //     // entity.State = _mapper.Map<Action.ActionState>(model.State);
-        //     // entity.IsDone = model.IsDone;
-        //     // entity.IsFocused = model.IsFocused;
-        //     // entity.TimeRequired = model.TimeRequired;
-        //     // entity.Energy =_mapper.Map<Action.EnergyLevel>(model.Energy);
-        //     // entity.DueDate = model.DueDate;
-        //     // entity.Tags = await _db.Tags.Where(x => x.Account == entity.Account && model.LabelTagIds.Contains(x.Id)).ToArrayAsync(ct);
-        //     // // entity.Areas.AddRange(_mapper.Map<Area[]>(model.AreaTags));
-        //     // // entity.Contacts.AddRange(_mapper.Map<Contact[]>(model.ContactTags));
-        //     // entity.ProjectId = model.ProjectId;
-        //     // entity.ScheduledDate = model.ScheduledDate;
-        //     // entity.WaitingContact = _mapper.Map<Contact>(model.WaitingContact);
-        //     //
-        //     // return NoContent();
-        // }
+
         
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteAsync(long id, [FromQuery]bool toTrashAction = false, CancellationToken ct = default)
+        public async Task<ActionResult> DeleteAsync(long id, [FromQuery]bool toTrashAction = true, CancellationToken ct = default)
         {
             var entity = await _db.Actions.Include(x => x.Account)
                 .FirstOrDefaultAsync(x => x.Id == id, ct);
@@ -178,10 +132,18 @@ namespace PlannerAPI.Controllers
             var areaTags = await _db.Areas.AsNoTracking().Where(x => x.Account == entity.Account).ToArrayAsync(ct);
             var contactTags = await _db.Contacts.AsNoTracking().Where(x => x.Account == entity.Account).ToArrayAsync(ct);
             
+            var includedIds = new List<long>();
             foreach (var tag in entity.Tags)
             {
+                // // if several tags with the same id were sent
+                // if (tag.Id != default && includedIds.Contains(tag.Id))
+                // {
+                //     entity.Tags.Remove(tag);
+                //     continue;
+                // }
                 if (labelTags.Select(x => x.Id).Contains(tag.Id))
                 {
+                    includedIds.Add(tag.Id);
                     _db.Update(tag);
                 }
                 else
@@ -191,10 +153,19 @@ namespace PlannerAPI.Controllers
                 }
                 tag.Account = entity.Account;
             }
+
+            includedIds = new List<long>();
             foreach (var area in entity.Areas)
             {
+                // if several tags with the same id were sent
+                // if (area.Id != default && includedIds.Contains(area.Id))
+                // {
+                //     entity.Areas.Remove(area);
+                //     continue;
+                // }
                 if (areaTags.Select(x => x.Id).Contains(area.Id))
                 {
+                    includedIds.Add(area.Id);
                     _db.Update(area);
                 }
                 else
@@ -204,10 +175,19 @@ namespace PlannerAPI.Controllers
                 }
                 area.Account = entity.Account;
             }
+            
+            includedIds = new List<long>();
             foreach (var contact in entity.Contacts)
             {
+                // if several tags with the same id were sent
+                // if (contact.Id != default && includedIds.Contains(contact.Id))
+                // {
+                //     entity.Contacts.Remove(contact);
+                //     continue;
+                // }
                 if (contactTags.Select(x => x.Id).Contains(contact.Id))
                 {
+                    includedIds.Add(contact.Id);
                     _db.Update(contact);
                 }
                 else
@@ -272,6 +252,10 @@ namespace PlannerAPI.Controllers
                 if (project is null || project.Account.UserName != User.Identity!.Name)
                     return BadRequest();
             }
+
+            if (model.DueDate is not null 
+                && DateTime.Parse(model.DueDate.Value.ToShortDateString()) < DateTime.Parse(DateTime.Now.ToShortDateString()) )
+                return BadRequest();
             
             return null;
         }

@@ -37,6 +37,23 @@ namespace PlannerAPI.Controllers
                 .ProjectTo<TrashActionModel>(_mapper.ConfigurationProvider).ToArrayAsync(ct);
         }
         
+        [HttpPut]
+        public async Task<ActionResult<TrashActionModel>> UpdateAsync(TrashActionModel model, CancellationToken ct = default)
+        {
+            var entity = await _db.TrashActions.Include(x => x.Account)
+                .FirstOrDefaultAsync(x => x.Id == model.Id, ct);
+
+            if (entity is null || entity.Account.UserName != User.Identity!.Name)
+                return Forbid();
+
+            entity.Name = model.Text;
+
+            _db.TrashActions.Update(entity);
+            await _db.SaveChangesAsync(ct);
+            
+            return NoContent();
+        }
+        
         [HttpDelete]
         public async Task<ActionResult> DeleteAllAsync(CancellationToken ct = default)
         {

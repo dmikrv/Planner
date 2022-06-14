@@ -69,13 +69,14 @@ namespace PlannerAPI.Controllers.TagsControllers
         [HttpPut]
         public async Task<ActionResult<LabelTagModel>> UpdateAsync(LabelTagModel model, CancellationToken ct = default)
         {
-            var entity = await _db.Tags.Include(x => x.Account).FirstOrDefaultAsync(x => x.Id == model.Id, ct);
+            var entity = await _db.Tags.Include(x => x.Account)
+                .FirstOrDefaultAsync(x => x.Id == model.Id, ct);
         
             if (entity is null || entity.Account.UserName != User.Identity!.Name)
                 return await AddAsync(model, ct);
 
             entity.Name = model.Name;
-            entity.Color = _mapper.Map<Color>(model.Color);
+            entity.Color = model.Color is not null ? _mapper.Map<Color>(model.Color) : null;
             
             _db.Tags.Update(entity);
             await _db.SaveChangesAsync(ct);

@@ -9,7 +9,7 @@ public class ActionModel
     public bool IsDone { get; set; }
     public bool IsFocused { get; set; }
     
-    public int? TimeRequired { get; set; } // time in minutes 
+    public string? TimeRequired { get; set; }
     public EnergyLevelModel? Energy { get; set; }
     public DateTime? DueDate { get; set; }
     
