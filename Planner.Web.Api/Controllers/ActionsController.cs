@@ -1,21 +1,16 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using NuGet.Packaging;
 using Planner.Data;
 using Planner.Data.Entities;
-using PlannerAPI.Models;
+using Planner.Web.Api.Models;
 using Action = Planner.Data.Entities.Action;
 
-namespace PlannerAPI.Controllers
+namespace Planner.Web.Api.Controllers
 {
     public static class TT
     {

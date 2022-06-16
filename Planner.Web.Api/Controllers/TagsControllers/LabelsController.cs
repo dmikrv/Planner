@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Authorization;
@@ -10,21 +6,21 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Planner.Data;
 using Planner.Data.Entities;
-using PlannerAPI.Models;
+using Planner.Web.Api.Models;
 
-namespace PlannerAPI.Controllers.TagsControllers
+namespace Planner.Web.Api.Controllers.TagsControllers
 {
     [Authorize(Roles = "user")]
     [Route("api/tags/[controller]")]
     [ApiController]
-    public class AreasController : ControllerBase
+    public class LabelsController : ControllerBase
     {
         private readonly PlannerContext _db;
         private readonly UserManager<Account> _userManager;
-        private readonly ILogger<AreasController> _logger;
+        private readonly ILogger<LabelsController> _logger;
         private readonly IMapper _mapper;
 
-        public AreasController(ILogger<AreasController> logger, UserManager<Account> userManager, PlannerContext db, IMapper mapper)
+        public LabelsController(ILogger<LabelsController> logger, UserManager<Account> userManager, PlannerContext db, IMapper mapper)
         {
             _db = db;
             _userManager = userManager;
@@ -33,33 +29,33 @@ namespace PlannerAPI.Controllers.TagsControllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<AreaTagModel>> GetAllAsync(CancellationToken ct = default)
+        public async Task<IEnumerable<LabelTagModel>> GetAllAsync(CancellationToken ct = default)
         {
-            return await _db.Areas.Where(x => x.Account.UserName == User.Identity!.Name)
-                .ProjectTo<AreaTagModel>(_mapper.ConfigurationProvider).ToArrayAsync(ct);
+            return await _db.Tags.Where(x => x.Account.UserName == User.Identity!.Name)
+                .ProjectTo<LabelTagModel>(_mapper.ConfigurationProvider).ToArrayAsync(ct);
         }
 
         [HttpGet("{id}")]
         [ActionName("GetAsync")]
-        public async Task<ActionResult<AreaTagModel>> GetAsync(long id, CancellationToken ct = default)
+        public async Task<ActionResult<LabelTagModel>> GetAsync(long id, CancellationToken ct = default)
         {
-            var entity = await _db.Areas.Include(x => x.Account)
+            var entity = await _db.Tags.Include(x => x.Account)
                 .FirstOrDefaultAsync(x => x.Id == id, ct);
 
             if (entity is null || entity.Account.UserName != User.Identity!.Name)
                 return Forbid();
         
-            return _mapper.Map<AreaTagModel>(entity);
+            return _mapper.Map<LabelTagModel>(entity);
         }
         
         [HttpPost]
-        public async Task<ActionResult<AreaTagModel>> AddAsync(AreaTagModel model, CancellationToken ct = default)
+        public async Task<ActionResult<LabelTagModel>> AddAsync(LabelTagModel model, CancellationToken ct = default)
         {
-            var entity = _mapper.Map<Area>(model);
+            var entity = _mapper.Map<Tag>(model);
             entity.Id = 0;
             entity.Account = await _userManager.FindByNameAsync(User.Identity!.Name);
             
-            _db.Areas.Add(entity);
+            _db.Tags.Add(entity);
             await _db.SaveChangesAsync(ct);
         
             model.Id = entity.Id;
@@ -67,18 +63,18 @@ namespace PlannerAPI.Controllers.TagsControllers
         }
         
         [HttpPut]
-        public async Task<ActionResult<AreaTagModel>> UpdateAsync(AreaTagModel model, CancellationToken ct = default)
+        public async Task<ActionResult<LabelTagModel>> UpdateAsync(LabelTagModel model, CancellationToken ct = default)
         {
-            var entity = await _db.Areas.Include(x => x.Account)
+            var entity = await _db.Tags.Include(x => x.Account)
                 .FirstOrDefaultAsync(x => x.Id == model.Id, ct);
         
             if (entity is null || entity.Account.UserName != User.Identity!.Name)
                 return await AddAsync(model, ct);
-        
+
             entity.Name = model.Name;
-            entity.Color = _mapper.Map<Color>(model.Color);
+            entity.Color = model.Color is not null ? _mapper.Map<Color>(model.Color) : null;
             
-            _db.Areas.Update(entity);
+            _db.Tags.Update(entity);
             await _db.SaveChangesAsync(ct);
             
             return NoContent();
@@ -87,13 +83,12 @@ namespace PlannerAPI.Controllers.TagsControllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteAsync(long id, CancellationToken ct = default)
         {
-            var entity = await _db.Areas.Include(x => x.Account)
-                .FirstOrDefaultAsync(x => x.Id == id, ct);
+            var entity = await _db.Tags.Include(x => x.Account).FirstOrDefaultAsync(x => x.Id == id, ct);
         
             if (entity is null || entity.Account.UserName != User.Identity!.Name)
                 return NoContent();
         
-            _db.Areas.Remove(entity);
+            _db.Tags.Remove(entity);
             await _db.SaveChangesAsync(ct);
             return NoContent();
         }

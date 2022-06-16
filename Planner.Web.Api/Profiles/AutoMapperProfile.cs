@@ -1,10 +1,9 @@
-using System.Drawing;
 using AutoMapper;
 using Planner.Data.Entities;
-using PlannerAPI.Models;
+using Planner.Web.Api.Models;
 using Action = Planner.Data.Entities.Action;
 
-namespace PlannerAPI.Profiles;
+namespace Planner.Web.Api.Profiles;
 
 public class AutoMapperProfile : Profile
 {

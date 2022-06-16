@@ -1,18 +1,13 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using NuGet.Packaging;
 using Planner.Data;
 using Planner.Data.Entities;
-using PlannerAPI.Models;
-
+using Planner.Web.Api.Models;
 using Action = Planner.Data.Entities.Action;
 
-namespace PlannerAPI.Controllers;
+namespace Planner.Web.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]

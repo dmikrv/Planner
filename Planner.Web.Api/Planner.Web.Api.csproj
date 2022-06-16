@@ -5,6 +5,8 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <AssemblyName>Planner.Web.Api</AssemblyName>
+        <RootNamespace>Planner.Web.Api</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

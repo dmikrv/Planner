@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Authorization;
@@ -11,9 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Planner.Data;
 using Planner.Data.Entities;
-using PlannerAPI.Models;
+using Planner.Web.Api.Models;
 
-namespace PlannerAPI.Controllers
+namespace Planner.Web.Api.Controllers
 {
     [Authorize(Roles = "user")]
     [Route("api/[controller]")]

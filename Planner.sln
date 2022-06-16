@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 #
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlannerAPI", "PlannerAPI\PlannerAPI.csproj", "{FD7D760F-444F-472D-BDB2-1BC125FFEF4F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Planner.Web.Api", "Planner.Web.Api\Planner.Web.Api.csproj", "{FD7D760F-444F-472D-BDB2-1BC125FFEF4F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Planner.Auth.Api", "Planner.Auth.Api\Planner.Auth.Api.csproj", "{437D6A7D-1B88-4CAC-A6E6-EBB68D9CB4DA}"
 EndProject

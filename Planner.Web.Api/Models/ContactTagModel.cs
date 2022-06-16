@@ -1,6 +1,6 @@
-namespace PlannerAPI.Models;
+namespace Planner.Web.Api.Models;
 
-public class LabelTagModel
+public class ContactTagModel
 {
     public long Id { get; set; }
     public string Name { get; set; }

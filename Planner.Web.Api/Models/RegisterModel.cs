@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace PlannerAPI.Models;
+namespace Planner.Web.Api.Models;
 
 public class RegisterModel
 {
