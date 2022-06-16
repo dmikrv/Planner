@@ -16,13 +16,17 @@ export class ActionService {
     @Inject(RESOURCE_API_URL) private apiUrl: string,
   ) { }
 
-  get(state: ActionState): Observable<Action[]> {
-    return this.http.get<Action[]>(`${this.apiUrl}/api/actions?state=${state}`);
+  get(state?: ActionState, done?:boolean, focused?: boolean ): Observable<Action[]> {
+    let url = `${this.apiUrl}/api/actions?`;
+    // if (state)
+    //
+    //   ?state=${state}
+    return this.http.get<Action[]>(url);
   }
 
-  getFocus(): Observable<Action[]> {
-    return this.http.get<Action[]>(`${this.apiUrl}/api/actions/focus`);
-  }
+  // getFocus(): Observable<Action[]> {
+  //   return this.http.get<Action[]>(`${this.apiUrl}/api/actions/focus`);
+  // }
 
   // getByProject(id: number): Observable<Action[]> {
   //   return this.http.get<Action[]>(`${this.apiUrl}/api/actions/project/${id}`);

@@ -26,7 +26,7 @@ import { AppComponent } from './app.component';
 import { ActionsModule } from './components/actions/actions.module';
 import { LoginComponent } from './components/login/login.component';
 import { TagsModule } from './components/tags/tags.module';
-import { NavBarComponent } from './nav-bar/nav-bar.component';
+import { NavBarComponent } from './components/nav-bar/nav-bar.component';
 import { ACCESS_TOKEN_KEY } from './services/auth.service';
 import {MatChipsModule} from "@angular/material/chips";
 import { LogoutComponent } from './components/logout/logout.component';

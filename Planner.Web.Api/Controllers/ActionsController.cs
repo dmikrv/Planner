@@ -38,20 +38,24 @@ namespace Planner.Web.Api.Controllers
         }
         
         [HttpGet]
-        public async Task<IEnumerable<ActionModel>> GetAllAsync([FromQuery, Required]ActionModel.ActionStateModel state, CancellationToken ct = default)
+        public async Task<IEnumerable<ActionModel>> GetAllAsync(
+            [FromQuery]ActionModel.ActionStateModel? state = null,
+            [FromQuery]bool? done = null,
+            [FromQuery]bool? focused = null,
+            CancellationToken ct = default)
         {
-            return await _db.Actions.Where(x => x.Account.UserName == User.Identity!.Name)
-                .Where(x => x.State == _mapper.Map<Action.ActionState>(state))
-                .ProjectTo<ActionModel>(_mapper.ConfigurationProvider).ToArrayAsync(ct);
-        }
-        
-        [HttpGet]
-        [Route("focus")]
-        public async Task<IEnumerable<ActionModel>> GetAllAsync(CancellationToken ct = default)
-        {
-            return await _db.Actions.Where(x => x.Account.UserName == User.Identity!.Name)
-                .Where(x => x.IsFocused)
-                .ProjectTo<ActionModel>(_mapper.ConfigurationProvider).ToArrayAsync(ct);
+            var actions = _db.Actions.Where(x => x.Account.UserName == User.Identity!.Name);
+
+            if (state is not null)
+                actions = actions.Where(x => x.State == _mapper.Map<Action.ActionState>(state));
+            
+            if (done is not null)
+                actions = actions.Where(x => x.IsDone == done);
+
+            if (focused is not null)
+                actions = actions.Where(x => x.IsFocused == focused);
+            
+            return await actions.ProjectTo<ActionModel>(_mapper.ConfigurationProvider).ToArrayAsync(ct);
         }
         
         [HttpGet("{id}")]

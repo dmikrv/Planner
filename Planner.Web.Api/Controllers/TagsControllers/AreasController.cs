@@ -72,7 +72,7 @@ namespace Planner.Web.Api.Controllers.TagsControllers
                 return await AddAsync(model, ct);
         
             entity.Name = model.Name;
-            entity.Color = _mapper.Map<Color>(model.Color);
+            entity.Color = model.Color is not null ? _mapper.Map<Color>(model.Color) : null;
             
             _db.Areas.Update(entity);
             await _db.SaveChangesAsync(ct);

@@ -83,7 +83,8 @@ namespace Planner.Web.Api.Controllers.TagsControllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteAsync(long id, CancellationToken ct = default)
         {
-            var entity = await _db.Tags.Include(x => x.Account).FirstOrDefaultAsync(x => x.Id == id, ct);
+            var entity = await _db.Tags.Include(x => x.Account)
+                .FirstOrDefaultAsync(x => x.Id == id, ct);
         
             if (entity is null || entity.Account.UserName != User.Identity!.Name)
                 return NoContent();
