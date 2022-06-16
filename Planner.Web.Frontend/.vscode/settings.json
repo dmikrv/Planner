@@ -1,0 +1,12 @@
+{
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "editor.detectIndentation": false,
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": false,
+    "source.fixAll.tslint": true
+  },
+  "tslint.configFile": "tslint.json",
+  "typescriptHero.imports.organizeOnSave": true,
+  "editor.tabSize": 2
+}
