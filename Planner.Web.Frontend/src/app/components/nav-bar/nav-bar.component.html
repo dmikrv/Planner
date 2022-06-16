@@ -9,14 +9,7 @@
   <div class="flex-spacer"></div>
   <mat-label *ngIf="isAuthenticated">{{userEmail}}</mat-label>
 
-  <mat-toolbar color="primary">
-    Angular Dark Mode
-    <div class="flex-stretch"></div>
-    <mat-icon class="mr-8">brightness_5</mat-icon>
-    <mat-slide-toggle [formControl]="toggleControl" class="mr-8">
-    </mat-slide-toggle>
-    <mat-icon>bedtime</mat-icon>
-  </mat-toolbar>
+  <app-theme-switch></app-theme-switch>
 
   <a *ngIf="isAuthenticated" mat-button (click)="logout()" matTooltip="Logout">
     <mat-icon>logout</mat-icon>
