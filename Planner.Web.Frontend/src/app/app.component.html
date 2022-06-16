@@ -1,0 +1,99 @@
+<div class="app">
+  <app-nav-bar class="navbar" [title]="title" (sidebarToggle)="sidenav?.toggle()"></app-nav-bar>
+
+  <mat-sidenav-container class="sidebar" color="primary">
+    <mat-sidenav [opened]="isAuthenticated" mode="side" class="sidenav" #sidenav>
+
+      <mat-accordion multi="true" style="padding: 0;">
+
+        <mat-expansion-panel class="expansion-panel" expanded="true">
+          <mat-expansion-panel-header>
+            <mat-panel-title>CAPTURE</mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <a mat-button class="sidenav-item" routerLinkActive="sidenav-item-active" routerLink="list/inbox">
+            <mat-icon class="sidebar-icon">inbox</mat-icon>
+            Inbox
+          </a>
+        </mat-expansion-panel>
+
+        <mat-divider></mat-divider>
+
+        <mat-expansion-panel class="expansion-panel" expanded="true">
+          <mat-expansion-panel-header>
+            <mat-panel-title>ACTIONS</mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <a mat-button class="sidenav-item" routerLinkActive="sidenav-item-active" routerLink="list/next">
+            <mat-icon class="sidebar-icon">access_time</mat-icon>
+            Next
+          </a>
+          <!--          <br>-->
+          <!--          <a mat-button class="sidenav-item" routerLinkActive="sidenav-item-active" routerLink="list/waiting">-->
+          <!--            <mat-icon class="sidebar-icon">coffee</mat-icon>-->
+          <!--            Waiting-->
+          <!--          </a>-->
+          <!--          <br>-->
+          <!--          <a mat-button class="sidenav-item" routerLinkActive="sidenav-item-active" routerLink="list/sheduled">-->
+          <!--            <mat-icon class="sidebar-icon">calendar_today</mat-icon>-->
+          <!--            Sheduled-->
+          <!--          </a>-->
+          <br>
+          <a mat-button class="sidenav-item" routerLinkActive="sidenav-item-active" routerLink="list/someday">
+            <mat-icon class="sidebar-icon">settings_brightness</mat-icon>
+            Someday
+          </a>
+          <mat-divider></mat-divider>
+          <a mat-button class="sidenav-item" routerLinkActive="sidenav-item-active" routerLink="list/focus">
+            <mat-icon class="sidebar-icon">star_border</mat-icon>
+            Focus
+          </a>
+        </mat-expansion-panel>
+
+        <mat-divider></mat-divider>
+
+        <mat-expansion-panel class="expansion-panel" expanded="true">
+          <mat-expansion-panel-header>
+            <mat-panel-title>TAGS</mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <a mat-button class="sidenav-item" routerLinkActive="sidenav-item-active" routerLink="tags/labels">
+            <mat-icon class="sidebar-icon">label</mat-icon>
+            Labels
+          </a>
+          <br>
+          <a mat-button class="sidenav-item" routerLinkActive="sidenav-item-active" routerLink="tags/contacts">
+            <mat-icon class="sidebar-icon">perm_contact_calendar</mat-icon>
+            Contacts
+          </a>
+          <br>
+          <a mat-button class="sidenav-item" routerLinkActive="sidenav-item-active" routerLink="tags/areas">
+            <mat-icon class="sidebar-icon">home</mat-icon>
+            Areas
+          </a>
+        </mat-expansion-panel>
+
+        <mat-divider></mat-divider>
+
+        <mat-expansion-panel class="expansion-panel" expanded="true">
+          <mat-expansion-panel-header>
+            <mat-panel-title>CLEANUP</mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <a mat-button class="sidenav-item" routerLinkActive="sidenav-item-active" routerLink="list/trash">
+            <mat-icon class="sidebar-icon">delete_outline</mat-icon>
+            Trash
+          </a>
+        </mat-expansion-panel>
+
+
+      </mat-accordion>
+
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+
+  </mat-sidenav-container>
+</div>

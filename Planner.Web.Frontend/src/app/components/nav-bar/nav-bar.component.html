@@ -1,0 +1,25 @@
+<mat-toolbar color="primary">
+
+  <button *ngIf="isAuthenticated" mat-button (click)="toggle()" matTooltip="Toggle sidebar">
+    <mat-icon>menu</mat-icon>
+  </button>
+
+  <button mat-button routerLink="/">{{title}}</button>
+
+  <div class="flex-spacer"></div>
+  <mat-label *ngIf="isAuthenticated">{{userEmail}}</mat-label>
+
+  <mat-toolbar color="primary">
+    Angular Dark Mode
+    <div class="flex-stretch"></div>
+    <mat-icon class="mr-8">brightness_5</mat-icon>
+    <mat-slide-toggle [formControl]="toggleControl" class="mr-8">
+    </mat-slide-toggle>
+    <mat-icon>bedtime</mat-icon>
+  </mat-toolbar>
+
+  <a *ngIf="isAuthenticated" mat-button (click)="logout()" matTooltip="Logout">
+    <mat-icon>logout</mat-icon>
+  </a>
+
+</mat-toolbar>
