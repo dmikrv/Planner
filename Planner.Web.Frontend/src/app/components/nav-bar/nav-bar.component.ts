@@ -1,9 +1,7 @@
-import {Component, EventEmitter, HostBinding, Input, OnInit, Output} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Router } from '@angular/router';
 
-import {Router} from "@angular/router";
-import {AuthService} from "../../services/auth.service";
-import {FormControl} from "@angular/forms";
-import {OverlayContainer} from "@angular/cdk/overlay";
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-nav-bar',
@@ -15,21 +13,10 @@ export class NavBarComponent implements OnInit {
   @Input() title: string | undefined;
   @Output() sidebarToggle = new EventEmitter();
 
-  toggleControl = new FormControl(false);
-  @HostBinding('class') className = '';
 
-  constructor(private authService: AuthService, private router: Router, private overlay: OverlayContainer) { }
+  constructor(private authService: AuthService, private router: Router) { }
 
   ngOnInit(): void {
-    this.toggleControl.valueChanges.subscribe((darkMode) => {
-      const darkClassName = 'darkMode';
-      this.className = darkMode ? darkClassName : '';
-      if (darkMode) {
-        this.overlay.getContainerElement().classList.add(darkClassName);
-      } else {
-        this.overlay.getContainerElement().classList.remove(darkClassName);
-      }
-    });
   }
 
   public logout(): void {
