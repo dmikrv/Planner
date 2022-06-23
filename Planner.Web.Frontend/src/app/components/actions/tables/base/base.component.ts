@@ -63,6 +63,10 @@ export class BaseTableComponent implements OnInit {
         row.isEdit = false
       });
     }
+
+    this.dataSource.data = this.dataSource.data.filter(
+      (u: Action) => ( this.stateShow ? u.state == this.stateShow : true)
+    );
   }
 
   addRow() {
@@ -121,7 +125,7 @@ export class BaseTableComponent implements OnInit {
     this.resService.update(element).subscribe((res) => {
       element.id = res.id;
       this.dataSource.data = this.dataSource.data.filter(
-        (u: Action) => ( !this.doneShow && !u.isDone || this.doneShow && u.isDone)
+        (u: Action) => (this.doneShow === undefined || !this.doneShow && !u.isDone || this.doneShow && u.isDone)
       );
     });
   }
@@ -130,14 +134,10 @@ export class BaseTableComponent implements OnInit {
     element.isFocused = !element.isFocused;
     this.resService.update(element).subscribe((res) => {
       element.id = res.id;
-      this.filterRows();
+      this.dataSource.data = this.dataSource.data.filter(
+        (u: Action) => ( this.focusShow === undefined || !this.focusShow && !u.isFocused || this.focusShow && u.isFocused)
+      );
     });
-  }
-
-  filterRows() {
-    this.dataSource.data = this.dataSource.data.filter(
-      (u: Action) => ( !this.focusShow && !u.isFocused || this.focusShow && u.isFocused)
-    );
   }
 
   disableSubmit(id: number) {
