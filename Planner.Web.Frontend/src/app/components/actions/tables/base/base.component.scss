@@ -62,3 +62,12 @@ h2 {
   height: 56px;
   border-radius: 50%;
 }
+
+.chip {
+  margin: 2px !important;
+}
+
+::ng-deep .mat-chip-list-wrapper {
+  margin-top: 4px !important;
+  margin-bottom: 4px !important;
+}
