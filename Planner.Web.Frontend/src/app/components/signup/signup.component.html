@@ -1,0 +1,45 @@
+<mat-card *ngIf="registerInvalid">
+  <mat-card-content>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <h2>Sign up</h2>
+      <mat-error *ngIf="registerInvalid">
+        <p *ngFor="let error of errors">{{error.description}}</p>
+      </mat-error>
+
+      <mat-form-field class="full-width-input">
+        <input matInput type="email" placeholder="Email" formControlName="username" required>
+        <mat-error>
+          Please provide a valid email address
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="full-width-input">
+        <input matInput type="password" placeholder="Password" formControlName="password" required>
+        <mat-error>
+          Please provide a valid password
+        </mat-error>
+      </mat-form-field>
+
+<!--      <mat-form-field class="full-width-input">-->
+<!--        <input matInput type="password" placeholder="Confirm password" formControlName="password" required>-->
+<!--        <mat-error>-->
+<!--          Password does not match-->
+<!--        </mat-error>-->
+<!--      </mat-form-field>-->
+
+      <p>
+        Already have account?
+        <a routerLink="/login">Login</a>
+      </p>
+
+      <button mat-raised-button color="primary">Register</button>
+
+    </form>
+  </mat-card-content>
+</mat-card>
+
+<div class="successRegister" *ngIf="!registerInvalid">
+  <p>Your new account is all set.</p>
+  <p class="big">Ready to get started?</p>
+  <a mat-raised-button routerLink="/login" color="primary">Let's go</a>
+</div>

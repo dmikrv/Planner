@@ -1,0 +1,26 @@
+mat-card {
+  max-width: 400px;
+  margin: 2em auto;
+  text-align: center;
+}
+
+mat-form-field {
+  display: block;
+  margin-bottom: 15px;
+}
+
+a {
+  color: dodgerblue;
+}
+
+.successRegister {
+  padding-top: 50px;
+  text-align: center;
+  align-items: center;
+}
+
+.successRegister > .big {
+  font: 40px Arial, sans-serif;
+  color: cornflowerblue;
+}
+

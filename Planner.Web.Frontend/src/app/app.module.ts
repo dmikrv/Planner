@@ -32,6 +32,7 @@ import { AUTH_API_URL, RESOURCE_API_URL } from './app-injections-tokens';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ThemeSwitchComponent } from './components/theme-switch/theme-switch.component';
+import {SignupComponent} from "./components/signup/signup.component";
 
 export function tokenGetter() {
   return localStorage.getItem(ACCESS_TOKEN_KEY) ?? sessionStorage.getItem(ACCESS_TOKEN_KEY);
@@ -41,6 +42,7 @@ export function tokenGetter() {
   declarations: [
     AppComponent,
     LoginComponent,
+    SignupComponent,
     NavBarComponent,
     LogoutComponent,
     ThemeSwitchComponent

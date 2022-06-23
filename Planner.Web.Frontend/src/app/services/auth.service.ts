@@ -5,7 +5,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { Observable, tap } from 'rxjs';
 
 import { Token } from '../models/token.model';
-import {AUTH_API_URL} from "../app-injections-tokens";
+import {AUTH_API_URL, RESOURCE_API_URL} from "../app-injections-tokens";
 
 export const ACCESS_TOKEN_KEY = 'planner_access_token';
 
@@ -19,6 +19,7 @@ export class AuthService {
   constructor(
     private http: HttpClient,
     @Inject(AUTH_API_URL) private apiUrl: string,
+    @Inject(RESOURCE_API_URL) private resUrl: string,
     private jwtHelper: JwtHelperService,
     private router: Router
   ) { }
@@ -39,11 +40,16 @@ export class AuthService {
     );
   }
 
+  signup(email: string, password: string): Observable<object> {
+    return this.http.post(`${this.resUrl}/api/accounts/signup`, {
+      email, password
+    });
+  }
+
   public get isAuthenticated(): boolean {
     if (!this._token) {
       this._token = localStorage.getItem(ACCESS_TOKEN_KEY) ?? sessionStorage.getItem(ACCESS_TOKEN_KEY);
     }
-
     return this._token != null && !this.jwtHelper.isTokenExpired(this._token);
   }
 

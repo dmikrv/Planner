@@ -9,11 +9,13 @@ import {ContactsComponent} from "../../../Planner.Web.Frontend/src/app/component
 import {AreasComponent} from "../../../Planner.Web.Frontend/src/app/components/tags/areas/areas.component";
 import {NextComponent} from "../../../Planner.Web.Frontend/src/app/components/actions/next/next.component";
 import {LogoutComponent} from "../../../Planner.Web.Frontend/src/app/components/logout/logout.component";
+import {SignupComponent} from "./components/signup/signup.component";
 
 const routes: Routes = [
   { path: '', redirectTo: 'list/next', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'logout', component: LogoutComponent },
+  { path: 'signup', component: SignupComponent },
   // { path: 'list/inbox', component: LabelsComponent, canActivate: [AuthGuardService] },
   { path: 'list/next', component: NextComponent, canActivate: [AuthGuardService] },
   { path: 'list/trash', component: TrashComponent, canActivate: [AuthGuardService] },

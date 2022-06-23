@@ -27,14 +27,6 @@ export class ActionService {
     return this.http.get<Action[]>(url);
   }
 
-  // getFocus(): Observable<Action[]> {
-  //   return this.http.get<Action[]>(`${this.apiUrl}/api/actions/focus`);
-  // }
-
-  // getByProject(id: number): Observable<Action[]> {
-  //   return this.http.get<Action[]>(`${this.apiUrl}/api/actions/project/${id}`);
-  // }
-
   add(action: Action): Observable<Action> {
     return this.http.post<Action>(`${this.apiUrl}/api/actions`, action);
   }
