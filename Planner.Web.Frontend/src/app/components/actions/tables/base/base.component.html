@@ -16,7 +16,10 @@
           <mat-checkbox (change)="isDone($event, element)" [checked]="element.isDone"></mat-checkbox>
         </ng-container>
         <ng-container *ngSwitchCase="'isFocused'">
-          <mat-checkbox (change)="isFocused($event, element)" [checked]="element.isFocused"></mat-checkbox>
+          <button mat-button class="star" (click)="focus(element)">
+            <mat-icon *ngIf="element.isFocused">star</mat-icon>
+            <mat-icon *ngIf="!element.isFocused">star_border</mat-icon>
+          </button>
         </ng-container>
         <div class="btn-edit" *ngSwitchCase="'isEdit'">
           <button mat-button (click)="element.isEdit = !element.isEdit">

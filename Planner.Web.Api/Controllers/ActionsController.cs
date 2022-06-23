@@ -100,8 +100,6 @@ namespace Planner.Web.Api.Controllers
             return CreatedAtAction(nameof(GetAsync), new { id = model.Id }, model);
         }
 
-
-        
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteAsync(long id, [FromQuery]bool toTrashAction = true, CancellationToken ct = default)
         {
@@ -150,7 +148,7 @@ namespace Planner.Web.Api.Controllers
                     tag.Id = default;
                     _db.Add(tag);
                 }
-                tag.Account = entity.Account;
+                tag.AccountId = entity.AccountId;
             }
 
             includedIds = new List<long>();
@@ -172,7 +170,7 @@ namespace Planner.Web.Api.Controllers
                     area.Id = default;
                     _db.Add(area);
                 }
-                area.Account = entity.Account;
+                area.AccountId = entity.AccountId;
             }
             
             includedIds = new List<long>();
@@ -194,13 +192,13 @@ namespace Planner.Web.Api.Controllers
                     contact.Id = default;
                     _db.Add(contact);
                 }
-                contact.Account = entity.Account;
+                contact.AccountId = entity.AccountId;
             }
             
             // waiting contact
             if (entity.WaitingContact is not null)
             {
-                entity.WaitingContact.Account = entity.Account;
+                entity.WaitingContact.AccountId = entity.AccountId;
                 // if the contact id was not specified
                 if (entity.WaitingContact.Id == default)
                 {

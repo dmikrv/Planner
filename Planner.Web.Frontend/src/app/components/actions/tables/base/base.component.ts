@@ -79,8 +79,8 @@ export class BaseTableComponent implements OnInit {
     this.resService.update(element).subscribe((res) => {element.id = res.id;});
   }
 
-  isFocused(e: any, element: Action) {
-    element.isFocused = e.checked;
+  focus(element: Action) {
+    element.isFocused = !element.isFocused;
     this.resService.update(element).subscribe((res) => {element.id = res.id;});
   }
 
