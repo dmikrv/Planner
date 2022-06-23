@@ -57,7 +57,11 @@ export class BaseTableComponent implements OnInit {
         row.isEdit = false;
       });
     } else {
-      this.resService.update(row).subscribe((res) => {row.id = res.id; row.isEdit = false});
+      this.resService.update(row).subscribe((res) => {
+        row.id = res.id;
+        row.dueDate = res.dueDate;
+        row.isEdit = false
+      });
     }
   }
 

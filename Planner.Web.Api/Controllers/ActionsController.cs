@@ -82,15 +82,19 @@ namespace Planner.Web.Api.Controllers
             var result = await Validate(model, ct);
             if (result is not null)
                 return result;
+            
+            if (string.IsNullOrEmpty(model.Text))
+                model.Text = "To do";
+
+            if (model.DueDate is not null
+                && DateTime.Parse(model.DueDate.Value.ToShortDateString()) < DateTime.Parse(DateTime.Now.ToShortDateString()))
+                model.DueDate = DateTime.Now;
         
             var entity = _mapper.Map<Action>(model);
             entity.Id = default;
             entity.CreatedDate = DateTime.Now;
             entity.Account = await _userManager.FindByNameAsync(User.Identity!.Name);
-
-            if (string.IsNullOrEmpty(entity.Text))
-                entity.Text = "To do";
-        
+            
             await ConnectTrackingChildren(entity, ct);
         
             _db.Actions.Add(entity);
@@ -250,10 +254,6 @@ namespace Planner.Web.Api.Controllers
                     return BadRequest();
             }
 
-            if (model.DueDate is not null 
-                && DateTime.Parse(model.DueDate.Value.ToShortDateString()) < DateTime.Parse(DateTime.Now.ToShortDateString()) )
-                return BadRequest();
-            
             return null;
         }
     }
