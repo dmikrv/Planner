@@ -10,14 +10,21 @@ import {AreasComponent} from "../../../Planner.Web.Frontend/src/app/components/t
 import {NextComponent} from "../../../Planner.Web.Frontend/src/app/components/actions/next/next.component";
 import {LogoutComponent} from "../../../Planner.Web.Frontend/src/app/components/logout/logout.component";
 import {SignupComponent} from "./components/signup/signup.component";
+import {DoneComponent} from "./components/actions/done/done.component";
+import {InboxComponent} from "./components/actions/inbox/inbox.component";
+import {SomedayComponent} from "./components/actions/someday/someday.component";
+import {FocusComponent} from "./components/actions/focus/focus.component";
 
 const routes: Routes = [
   { path: '', redirectTo: 'list/next', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'logout', component: LogoutComponent },
   { path: 'signup', component: SignupComponent },
-  // { path: 'list/inbox', component: LabelsComponent, canActivate: [AuthGuardService] },
+  { path: 'list/inbox', component: InboxComponent, canActivate: [AuthGuardService] },
+  { path: 'list/someday', component: SomedayComponent, canActivate: [AuthGuardService] },
   { path: 'list/next', component: NextComponent, canActivate: [AuthGuardService] },
+  { path: 'list/done', component: DoneComponent, canActivate: [AuthGuardService] },
+  { path: 'list/focus', component: FocusComponent, canActivate: [AuthGuardService] },
   { path: 'list/trash', component: TrashComponent, canActivate: [AuthGuardService] },
 
   { path: 'tags/labels', component: LabelsComponent, canActivate: [AuthGuardService] },

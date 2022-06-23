@@ -148,7 +148,7 @@ namespace Planner.Web.Api.Controllers
                     tag.Id = default;
                     _db.Add(tag);
                 }
-                tag.AccountId = entity.AccountId;
+                tag.Account = entity.Account;
             }
 
             includedIds = new List<long>();
@@ -170,7 +170,7 @@ namespace Planner.Web.Api.Controllers
                     area.Id = default;
                     _db.Add(area);
                 }
-                area.AccountId = entity.AccountId;
+                area.Account = entity.Account;
             }
             
             includedIds = new List<long>();
@@ -192,13 +192,13 @@ namespace Planner.Web.Api.Controllers
                     contact.Id = default;
                     _db.Add(contact);
                 }
-                contact.AccountId = entity.AccountId;
+                contact.Account = entity.Account;
             }
             
             // waiting contact
             if (entity.WaitingContact is not null)
             {
-                entity.WaitingContact.AccountId = entity.AccountId;
+                entity.WaitingContact.Account = entity.Account;
                 // if the contact id was not specified
                 if (entity.WaitingContact.Id == default)
                 {

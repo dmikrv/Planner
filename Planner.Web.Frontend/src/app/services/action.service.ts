@@ -17,12 +17,13 @@ export class ActionService {
   ) { }
 
   get(state?: ActionState, done?:boolean, focused?: boolean ): Observable<Action[]> {
+    console.log(done);
     let url = `${this.apiUrl}/api/actions?`;
-    if (state)
+    if (state !== undefined)
       url += `state=${state}&`;
-    else if (done)
-      url += `done=${focused}&`;
-    else if (focused)
+    if (done !== undefined)
+      url += `done=${done}&`;
+    if (focused !== undefined)
       url += `focused=${focused}`;
     return this.http.get<Action[]>(url);
   }
@@ -32,10 +33,11 @@ export class ActionService {
   }
 
   update(action: Action): Observable<Action> {
-    return this.http.put<Action>(`${this.apiUrl}/api/actions`, action);
-  //   return this.http.delete(`${this.apiUrl}/api/actions/${action.id}?toTrashAction=false`).pipe(
-  //     switchMap(() => this.http.post<Action>(`${this.apiUrl}/api/actions`, action)),
-  // );
+    let x = this.http.post<Action>(`${this.apiUrl}/api/actions`, action)
+    x.subscribe(res => {
+      this.http.delete(`${this.apiUrl}/api/actions/${action.id}?toTrashAction=false`)
+    })
+    return x;
   }
 
   delete(id: number) {

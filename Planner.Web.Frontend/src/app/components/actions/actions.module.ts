@@ -17,10 +17,18 @@ import {BaseTableComponent} from './tables/base/base.component';
 import {MatChipsModule} from "@angular/material/chips";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import { TagControlComponent } from './tables/tag-control/tag-control.component';
+import {DoneComponent} from "./done/done.component";
+import {InboxComponent} from "./inbox/inbox.component";
+import {SomedayComponent} from "./someday/someday.component";
+import {FocusComponent} from "./focus/focus.component";
 
 @NgModule({
   declarations: [
     NextComponent,
+    SomedayComponent,
+    InboxComponent,
+    DoneComponent,
+    FocusComponent,
     TrashComponent,
     BaseTableComponent,
     TagControlComponent,

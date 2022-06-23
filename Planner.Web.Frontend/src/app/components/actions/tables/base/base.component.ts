@@ -1,9 +1,13 @@
-import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {MatTableDataSource} from '@angular/material/table';
 
 import {Action, BaseActionColumns} from "../../../../models/action.model";
 import {ActionService} from "../../../../services/action.service";
 import {ActionState} from "../../../../models/state.action.model";
+import {Project} from "../../../../models/project.model";
+import {ProjectService} from "../../../../services/project.service";
+import {ConfirmDeleteDialogComponent} from "../../../confirm-delete-dialog/confirm-delete-dialog.component";
+import {MatDialog} from "@angular/material/dialog";
 
 
 @Component({
@@ -15,16 +19,30 @@ export class BaseTableComponent implements OnInit {
   displayedColumns: string[] = BaseActionColumns.map((col) => col.key);
   columnsSchema: any = BaseActionColumns;
   dataSource = new MatTableDataSource<Action>();
+  projects: Project[] = [];
   valid: any = {};
 
-  @Input() state: ActionState = ActionState.Next;
+  @Input() stateShow?: ActionState = undefined;
+  @Input() focusShow?: boolean = undefined;
+  @Input() doneShow?: boolean = undefined;
+  @Input() addActionButtonShow: boolean = true;
+  @Input() removeAllButtonShow: boolean = false;
 
-  constructor(private resService: ActionService) { }
+  constructor(private resService: ActionService,
+              private projectService: ProjectService,
+              public dialog: MatDialog) { }
 
   ngOnInit(): void {
-    this.resService.get(this.state).subscribe((res: Action[]) => {
+    this.resService.get(this.stateShow, this.doneShow, this.focusShow).subscribe((res: Action[]) => {
       this.dataSource.data = res;
     });
+    this.projectService.get().subscribe((res: Project[]) => {
+      this.projects = res;
+    });
+  }
+
+  getProjectNameById(id: number): string {
+    return this.projects.find(x => x.id === id)?.name ?? '';
   }
 
   editRow(row: Action) {
@@ -40,7 +58,6 @@ export class BaseTableComponent implements OnInit {
       });
     } else {
       this.resService.update(row).subscribe((res) => {row.id = res.id; row.isEdit = false});
-      console.log("update", row);
     }
   }
 
@@ -48,10 +65,11 @@ export class BaseTableComponent implements OnInit {
     const newRow: Action = {
       id: 0,
       text: 'to do',
-      state: this.state,
+      state: this.stateShow ?? ActionState.Next,
       isDone: false,
-      isFocused: false,
+      isFocused: this.focusShow ?? false,
       isEdit: true,
+      projectId: undefined,
       labelTags: [],
       areaTags: [],
       contactTags: []
@@ -60,11 +78,31 @@ export class BaseTableComponent implements OnInit {
   }
 
   removeRow(id: number) {
-    this.resService.delete(id).subscribe(() => {
-      this.dataSource.data = this.dataSource.data.filter(
-        (u: Action) => u.id !== id
-      );
-    });
+    this.dialog
+      .open(ConfirmDeleteDialogComponent)
+      .afterClosed()
+      .subscribe((confirm) => {
+        if (confirm) {
+          this.resService.delete(id).subscribe(() => {
+            this.dataSource.data = this.dataSource.data.filter(
+              (u: Action) => u.id !== id
+            );
+          });
+        }
+      });
+  }
+
+  removeAllRows() {
+    this.dialog
+      .open(ConfirmDeleteDialogComponent)
+      .afterClosed()
+      .subscribe((confirm) => {
+        if (confirm) {
+          this.resService.deleteMany(this.dataSource.data).subscribe(() => {
+            this.dataSource.data = []
+          });
+        }
+      });
   }
 
   inputHandler(e: any, element: Action, key: string) {
@@ -74,9 +112,14 @@ export class BaseTableComponent implements OnInit {
     this.valid[element.id][key] = e.target.validity.valid;
   }
 
-  isDone(e: any, element: Action) {
+  done(e: any, element: Action) {
     element.isDone = e.checked;
-    this.resService.update(element).subscribe((res) => {element.id = res.id;});
+    this.resService.update(element).subscribe((res) => {
+      element.id = res.id;
+      this.dataSource.data = this.dataSource.data.filter(
+        (u: Action) => ( !this.doneShow && !u.isDone || this.doneShow && u.isDone)
+      );
+    });
   }
 
   focus(element: Action) {

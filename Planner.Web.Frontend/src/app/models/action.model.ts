@@ -22,8 +22,8 @@ export interface Action {
 
   projectId?: number,
 
-  waitingContact?: ContactTag,
-  scheduledDate?: Date,
+  // waitingContact?: ContactTag,
+  // scheduledDate?: Date,
 
   isEdit: boolean
 }
@@ -32,20 +32,20 @@ export const BaseActionColumns = [
   {
     key: 'isDone',
     type: 'isDone',
-    label: 'Done?',
-    colWidth: 2,
+    label: '',
+    colWidth: '1%',
   },
   {
     key: 'isFocused',
     type: 'isFocused',
-    label: 'Focused?',
-    colWidth: 5,
+    label: '',
+    colWidth: `1%`,
   },
   {
     key: 'text',
     type: 'text',
     label: 'Text',
-    colWidth: 25,
+    colWidth: `20%`,
   },
   // {
   //   key: 'notes',
@@ -57,7 +57,8 @@ export const BaseActionColumns = [
     type: 'select',
     label: 'State',
     selectItems: Object.values(ActionState).filter(o => typeof (o) === 'string'),
-    colWidth: 5,
+    colWidth: '5%',
+    onlyEdit: true,
   },
   {
     key: 'timeRequired',
@@ -65,26 +66,32 @@ export const BaseActionColumns = [
     label: 'Time Required',
     selectItems: [null, '5 minutes', '10 minutes', '15 minutes', '30 minutes', '45 minutes',
       '1 hour', '2 hours', '3 hours', '4 hours', '6 hours', '8 hours', 'whoa nelly!'],
-    colWidth: 10,
+    colWidth: '7%',
   },
   {
     key: 'energy',
     type: 'select',
     label: 'Energy',
     selectItems: [null, ...Object.values(ActionEnergy).filter(o => typeof (o) === 'string')],
-    colWidth: 10,
+    colWidth: '4%',
   },
   {
     key: 'dueDate',
     type: 'date',
     label: 'Due date',
-    colWidth: 25,
+    colWidth: '7%',
+  },
+  {
+    key: 'projectId',
+    type: 'projectSelect',
+    label: 'Project',
+    colWidth: '10%',
   },
   {
     key: 'tags',
     type: 'tags',
     label: 'Tags',
-    colWidth: 25,
+    colWidth: '30%',
   },
 
   {

@@ -4,6 +4,7 @@ import {TrashAction, TrashActionColumns} from "../../../models/trash-action.mode
 import {MatDialog} from "@angular/material/dialog";
 import {TrashActionService} from "../../../services/trash-action.service";
 import {ConfirmDeleteDialogComponent} from "../../confirm-delete-dialog/confirm-delete-dialog.component";
+import {Action} from "../../../models/action.model";
 
 @Component({
   selector: 'app-trash',
@@ -41,11 +42,18 @@ export class TrashComponent implements OnInit {
   }
 
   removeAllRows() {
-    this.resService.deleteAll().subscribe(() => {
-      this.dataSource.data = this.dataSource.data.filter(
-        (u: TrashAction) => false
-      );
-    });
+    this.dialog
+      .open(ConfirmDeleteDialogComponent)
+      .afterClosed()
+      .subscribe((confirm) => {
+        if (confirm) {
+          this.resService.deleteAll().subscribe(() => {
+            this.dataSource.data = this.dataSource.data.filter(
+              (u: TrashAction) => false
+            );
+          });
+        }
+      });
   }
 
   removeSelectedRows() {
