@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
-import {forkJoin, Observable, switchMap, tap} from 'rxjs';
+import {forkJoin, map, Observable, switchMap, tap} from 'rxjs';
 
 import {RESOURCE_API_URL} from "../app-injections-tokens";
 import {Action} from "../models/action.model";
@@ -33,11 +33,11 @@ export class ActionService {
   }
 
   update(action: Action): Observable<Action> {
-    let x = this.http.post<Action>(`${this.apiUrl}/api/actions`, action)
-    x.subscribe(res => {
-      this.http.delete(`${this.apiUrl}/api/actions/${action.id}?toTrashAction=false`)
-    })
-    return x;
+    let deleteId = action.id;
+    return this.http.post<Action>(`${this.apiUrl}/api/actions`, action).pipe(
+      switchMap((action) => this.http.delete(`${this.apiUrl}/api/actions/${deleteId}?toTrashAction=false`)
+        .pipe(map(() => action)))
+    );
   }
 
   delete(id: number) {

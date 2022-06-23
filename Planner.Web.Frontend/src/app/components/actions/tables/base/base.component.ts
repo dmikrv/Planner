@@ -124,7 +124,16 @@ export class BaseTableComponent implements OnInit {
 
   focus(element: Action) {
     element.isFocused = !element.isFocused;
-    this.resService.update(element).subscribe((res) => {element.id = res.id;});
+    this.resService.update(element).subscribe((res) => {
+      element.id = res.id;
+      this.filterRows();
+    });
+  }
+
+  filterRows() {
+    this.dataSource.data = this.dataSource.data.filter(
+      (u: Action) => ( !this.focusShow && !u.isFocused || this.focusShow && u.isFocused)
+    );
   }
 
   disableSubmit(id: number) {
