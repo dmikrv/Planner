@@ -1,4 +1,4 @@
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -12,6 +12,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTableModule } from '@angular/material/table';
@@ -31,8 +32,10 @@ import { ACCESS_TOKEN_KEY } from '../../../Planner.Web.Frontend/src/app/services
 import { AUTH_API_URL, RESOURCE_API_URL } from './app-injections-tokens';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { LoaderComponent } from './components/loader/loader.component';
+import { SignupComponent } from './components/signup/signup.component';
 import { ThemeSwitchComponent } from './components/theme-switch/theme-switch.component';
-import {SignupComponent} from "./components/signup/signup.component";
+import { LoaderInterceptor } from './interceptors/loader.interceptor';
 
 export function tokenGetter() {
   return localStorage.getItem(ACCESS_TOKEN_KEY) ?? sessionStorage.getItem(ACCESS_TOKEN_KEY);
@@ -45,7 +48,8 @@ export function tokenGetter() {
     SignupComponent,
     NavBarComponent,
     LogoutComponent,
-    ThemeSwitchComponent
+    ThemeSwitchComponent,
+    LoaderComponent
   ],
   imports: [
     BrowserModule,
@@ -79,19 +83,27 @@ export function tokenGetter() {
     MatDividerModule,
     MatFormFieldModule,
     MatChipsModule,
+    MatProgressSpinnerModule,
 
     ActionsModule,
     TagsModule,
     MatSlideToggleModule,
   ],
-  providers: [{
-    provide: AUTH_API_URL,
-    useValue: environment.authApi
-  },
-  {
-    provide: RESOURCE_API_URL,
-    useValue: environment.resourceApi
-  }],
+  providers: [
+    {
+      provide: AUTH_API_URL,
+      useValue: environment.authApi
+    },
+    {
+      provide: RESOURCE_API_URL,
+      useValue: environment.resourceApi
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: LoaderInterceptor,
+      multi: true,
+    },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
