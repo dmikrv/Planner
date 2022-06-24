@@ -55,7 +55,26 @@
         </mat-expansion-panel>
 
         <mat-divider></mat-divider>
+        <mat-expansion-panel class="expansion-panel" expanded="true">
+          <mat-expansion-panel-header>
+            <mat-panel-title>PROJECTS</mat-panel-title>
+          </mat-expansion-panel-header>
 
+          <a mat-button  class="sidenav-item" routerLinkActive="sidenav-item-active" routerLink="project">
+            <mat-icon class="sidebar-icon">work_outline</mat-icon>
+            Projects
+          </a>
+
+          <mat-divider></mat-divider>
+
+          <a mat-button *ngFor="let project of projects" class="sidenav-item" routerLinkActive="sidenav-item-active" [routerLink]="'list/project/'+project.id">
+            <mat-icon class="sidebar-icon">work_outline</mat-icon>
+            {{project.name}}
+          </a>
+<!--          <br>-->
+        </mat-expansion-panel>
+
+        <mat-divider></mat-divider>
         <mat-expansion-panel class="expansion-panel" expanded="true">
           <mat-expansion-panel-header>
             <mat-panel-title>TAGS</mat-panel-title>

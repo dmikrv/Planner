@@ -25,6 +25,11 @@ export class BaseTableComponent implements OnInit {
   @Input() stateShow?: ActionState = undefined;
   @Input() focusShow?: boolean = undefined;
   @Input() doneShow?: boolean = undefined;
+  id?: number;
+  @Input() public set projectIdShow(id: number | undefined) {
+    this.id = id;
+    this.ngOnInit();
+  }
   @Input() addActionButtonShow: boolean = true;
   @Input() removeAllButtonShow: boolean = false;
 
@@ -33,7 +38,7 @@ export class BaseTableComponent implements OnInit {
               public dialog: MatDialog) { }
 
   ngOnInit(): void {
-    this.resService.get(this.stateShow, this.doneShow, this.focusShow).subscribe((res: Action[]) => {
+    this.resService.get(this.stateShow, this.doneShow, this.focusShow, this.id).subscribe((res: Action[]) => {
       this.dataSource.data = res;
     });
     this.projectService.get().subscribe((res: Project[]) => {
@@ -65,7 +70,8 @@ export class BaseTableComponent implements OnInit {
     }
 
     this.dataSource.data = this.dataSource.data.filter(
-      (u: Action) => ( this.stateShow ? u.state == this.stateShow : true)
+      (u: Action) => ( (this.stateShow ? u.state == this.stateShow : true)
+        && (this.projectIdShow ? u.projectId == this.projectIdShow : true))
     );
   }
 
@@ -77,7 +83,7 @@ export class BaseTableComponent implements OnInit {
       isDone: false,
       isFocused: this.focusShow ?? false,
       isEdit: true,
-      projectId: undefined,
+      projectId: this.projectIdShow ?? undefined,
       labelTags: [],
       areaTags: [],
       contactTags: []

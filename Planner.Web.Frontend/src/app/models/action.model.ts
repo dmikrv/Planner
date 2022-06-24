@@ -47,11 +47,6 @@ export const BaseActionColumns = [
     label: 'Text',
     colWidth: `20%`,
   },
-  // {
-  //   key: 'notes',
-  //   type: 'notes',
-  //   label: 'Notes'
-  // },
   {
     key: 'state',
     type: 'select',

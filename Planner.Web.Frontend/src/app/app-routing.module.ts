@@ -14,6 +14,8 @@ import {DoneComponent} from "./components/actions/done/done.component";
 import {InboxComponent} from "./components/actions/inbox/inbox.component";
 import {SomedayComponent} from "./components/actions/someday/someday.component";
 import {FocusComponent} from "./components/actions/focus/focus.component";
+import {ProjectListComponent} from "./components/actions/project-list/project-list.component";
+import {ProjectsComponent} from "./components/projects/projects.component";
 
 const routes: Routes = [
   { path: '', redirectTo: 'list/next', pathMatch: 'full' },
@@ -26,6 +28,9 @@ const routes: Routes = [
   { path: 'list/done', component: DoneComponent, canActivate: [AuthGuardService] },
   { path: 'list/focus', component: FocusComponent, canActivate: [AuthGuardService] },
   { path: 'list/trash', component: TrashComponent, canActivate: [AuthGuardService] },
+  { path: 'list/project/:id', component: ProjectListComponent, canActivate: [AuthGuardService] },
+
+  { path: 'project', component: ProjectsComponent, canActivate: [AuthGuardService] },
 
   { path: 'tags/labels', component: LabelsComponent, canActivate: [AuthGuardService] },
   { path: 'tags/contacts', component: ContactsComponent, canActivate: [AuthGuardService] },

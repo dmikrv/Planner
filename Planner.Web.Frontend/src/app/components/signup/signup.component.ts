@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthService } from '../../services/auth.service';
@@ -23,7 +23,6 @@ export class SignupComponent implements OnInit {
     private as: AuthService) { }
 
   async onSubmit() {
-    // this.registerInvalid = false;
     this.formSubmitAttempt = false;
 
     if (this.form.valid) {
@@ -50,12 +49,23 @@ export class SignupComponent implements OnInit {
     }
   }
 
+  passwordConfirming(c: AbstractControl): { invalid: boolean } {
+    if (c.get('password')?.value !== c.get('confirm_password')?.value) {
+      return {invalid: true};
+    }
+    return {invalid: false}
+  }
+
   async ngOnInit() {
     this.form = this.fb.group({
       username: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required]],
-      // confirmPassword: ['', [Validators.required]],
+      passwords: this.fb.group({
+        password: ['', [Validators.required]],
+        confirm_password: ['', [Validators.required]],
+      }, {validator: this.passwordConfirming}),
     });
+
+    console.log(this.form.get('passwords') as FormGroup);
 
     if (this.as.isAuthenticated) {
       this.router.navigate(['']);

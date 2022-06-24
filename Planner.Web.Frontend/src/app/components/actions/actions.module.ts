@@ -21,6 +21,7 @@ import {DoneComponent} from "./done/done.component";
 import {InboxComponent} from "./inbox/inbox.component";
 import {SomedayComponent} from "./someday/someday.component";
 import {FocusComponent} from "./focus/focus.component";
+import {ProjectListComponent} from "./project-list/project-list.component";
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import {FocusComponent} from "./focus/focus.component";
     TrashComponent,
     BaseTableComponent,
     TagControlComponent,
+    ProjectListComponent
   ],
   imports: [
     CommonModule,

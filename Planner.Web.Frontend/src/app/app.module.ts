@@ -36,6 +36,9 @@ import { LoaderComponent } from './components/loader/loader.component';
 import { SignupComponent } from './components/signup/signup.component';
 import { ThemeSwitchComponent } from './components/theme-switch/theme-switch.component';
 import { LoaderInterceptor } from './interceptors/loader.interceptor';
+import {ProjectsComponent} from "./components/projects/projects.component";
+import {MatDatepickerModule} from "@angular/material/datepicker";
+import {MatSelectModule} from "@angular/material/select";
 
 export function tokenGetter() {
   return localStorage.getItem(ACCESS_TOKEN_KEY) ?? sessionStorage.getItem(ACCESS_TOKEN_KEY);
@@ -49,7 +52,8 @@ export function tokenGetter() {
     NavBarComponent,
     LogoutComponent,
     ThemeSwitchComponent,
-    LoaderComponent
+    LoaderComponent,
+    ProjectsComponent,
   ],
   imports: [
     BrowserModule,
@@ -88,6 +92,8 @@ export function tokenGetter() {
     ActionsModule,
     TagsModule,
     MatSlideToggleModule,
+    MatDatepickerModule,
+    MatSelectModule,
   ],
   providers: [
     {

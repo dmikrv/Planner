@@ -16,7 +16,7 @@ export class ActionService {
     @Inject(RESOURCE_API_URL) private apiUrl: string,
   ) { }
 
-  get(state?: ActionState, done?:boolean, focused?: boolean ): Observable<Action[]> {
+  get(state?: ActionState, done?:boolean, focused?: boolean, projectId?: number): Observable<Action[]> {
     console.log(done);
     let url = `${this.apiUrl}/api/actions?`;
     if (state !== undefined)
@@ -24,7 +24,9 @@ export class ActionService {
     if (done !== undefined)
       url += `done=${done}&`;
     if (focused !== undefined)
-      url += `focused=${focused}`;
+      url += `focused=${focused}&`;
+    if (projectId !== undefined)
+      url += `projectId=${projectId}`;
     return this.http.get<Action[]>(url);
   }
 
