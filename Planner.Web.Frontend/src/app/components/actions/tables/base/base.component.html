@@ -38,9 +38,9 @@
         </span>
         <span *ngSwitchCase="'tags'">
           <mat-chip-list>
-            <mat-chip class="chip" *ngFor="let tag of element.areaTags">{{tag.name}}</mat-chip>
-            <mat-chip class="chip" *ngFor="let tag of element.labelTags">{{tag.name}}</mat-chip>
-            <mat-chip class="chip" *ngFor="let tag of element.contactTags">{{tag.name}}</mat-chip>
+            <mat-chip class="chip" *ngFor="let tag of element.areaTags"><mat-icon [style.color]="tag.color">home</mat-icon>{{tag.name}}</mat-chip>
+            <mat-chip class="chip" *ngFor="let tag of element.labelTags"><mat-icon [style.color]="tag.color">label</mat-icon>{{tag.name}}</mat-chip>
+            <mat-chip class="chip" *ngFor="let tag of element.contactTags"><mat-icon [style.color]="tag.color">perm_contact_calendar</mat-icon>{{tag.name}}</mat-chip>
           </mat-chip-list>
         </span>
         <span *ngSwitchCase="'projectSelect'">
