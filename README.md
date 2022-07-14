@@ -1,4 +1,4 @@
-[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://github.com/alainm23/planner/blob/master/LICENSE)
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://github.com/fan1ech00/planner/blob/master/LICENSE)
 
 <div align="center">
   <span align="center"> <img width="80" height="80" class="center" src="./data/icon.svg" alt="Icon"></span>
