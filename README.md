@@ -7,6 +7,14 @@
 
 ![Planner Screenshot](./data/planner-screenshot.png)
 
+## Features
+
+- Add, delete and update task
+- Add date/time of execution, tags and priority to task
+- Work with projects
+- White / dark theme
+- Account registration and authorization
+
 ## GIF
 
 ![Auth gif](./data/auth.gif)
