@@ -3,7 +3,6 @@
 <div align="center">
   <span align="center"> <img width="80" height="80" class="center" src="./data/icon.svg" alt="Icon"></span>
   <h1 align="center">Planner</h1>
-  <h3 align="center">Never worry about forgetting things again</h3>
 </div>
 
 ![Planner Screenshot](./data/planner-screenshot.png)
